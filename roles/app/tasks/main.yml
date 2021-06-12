@@ -3,3 +3,19 @@
     pkg:
       - mc
       - htop
+
+- name: Put users into authorized keys
+  ansible.posix.authorized_key:
+    user: root
+    state: present
+    key: '{{ item }}'
+  with_file:
+    - public_keys/adduser.pub
+
+- name: Remove users from authorized keys
+  ansible.posix.authorized_key:
+    user: root
+    state: absent
+    key: '{{ item }}'
+  with_file:
+    - public_keys/removeuser.pub
