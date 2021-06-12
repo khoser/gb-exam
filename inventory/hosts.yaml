@@ -1,14 +1,17 @@
+---
+
 all:
   children:
     app:
       hosts:
         app1:
-	app2:
+        app2:
     sql:
       hosts:
         sql1:
-	sql2:
-	sql3:
+        sql2:
+        sql3:
     mon:
       hosts:
         mon:
+
