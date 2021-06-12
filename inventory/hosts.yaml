@@ -1,14 +1,17 @@
+---
+
 all:
   children:
     app:
       hosts:
-        10.0.0.17:
-        10.0.0.5:
+        Ubuntu_Basic-1-2_30GB-app-1:
+        Ubuntu_Basic-1-2_30GB-app-2:
     sql:
       hosts:
-        10.0.0.8:
-        10.0.0.18:
-        10.0.0.11:
+        Ubuntu_Basic-1-2_30GB-sql-1:
+        Ubuntu_Basic-1-2_30GB-sql-2:
+        Ubuntu_Basic-1-2_30GB-sql-3:
     mon:
       hosts:
-        10.0.0.21:
+        Ubuntu_Basic-1-2_30GB-mon:
+
