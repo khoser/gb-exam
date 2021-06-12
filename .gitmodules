@@ -1,3 +1,0 @@
-[submodule "roles/firewall"]
-	path = roles/firewall
-	url = https://github.com/geerlingguy/ansible-role-firewall.git
