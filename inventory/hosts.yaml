@@ -2,13 +2,13 @@ all:
   children:
     app:
       hosts:
-        10.0.0.17:
-        10.0.0.5:
+        app1:
+	app2:
     sql:
       hosts:
-        10.0.0.8:
-        10.0.0.18:
-        10.0.0.11:
+        sql1:
+	sql2:
+	sql3:
     mon:
       hosts:
-        10.0.0.21:
+        mon:
