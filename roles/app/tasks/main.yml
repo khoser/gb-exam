@@ -4,13 +4,14 @@
       - mc
       - htop
 
-- name: Put users into authorized keys
+- name: Add users into authorized keys
   authorized_key:
     user: root
     state: present
     key: '{{ item }}'
   with_file:
     - public_keys/adduser.pub
+  when: add_user_flag
 
 - name: Remove users from authorized keys
   authorized_key:
@@ -19,3 +20,4 @@
     key: '{{ item }}'
   with_file:
     - public_keys/removeuser.pub
+  when: remove_user_flag
