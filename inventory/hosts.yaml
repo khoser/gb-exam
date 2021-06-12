@@ -4,14 +4,14 @@ all:
   children:
     app:
       hosts:
-        app1:
-        app2:
+        Ubuntu_Basic-1-2_30GB-app-1:
+        Ubuntu_Basic-1-2_30GB-app-2:
     sql:
       hosts:
-        sql1:
-        sql2:
-        sql3:
+        Ubuntu_Basic-1-2_30GB-sql-1:
+        Ubuntu_Basic-1-2_30GB-sql-2:
+        Ubuntu_Basic-1-2_30GB-sql-3:
     mon:
       hosts:
-        mon:
+        Ubuntu_Basic-1-2_30GB-mon:
 
