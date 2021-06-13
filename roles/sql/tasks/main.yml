@@ -1,5 +1,2 @@
-- name: Install mc, htop
-  apt:
-    pkg:
-      - mc
-      - htop
+- name: common
+  import_tasks: common.yml
