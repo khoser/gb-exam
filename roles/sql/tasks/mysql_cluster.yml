@@ -3,12 +3,6 @@
 
 # Setup Mysql server 5.7 galera cluster repositories
 
-- name: at first install mysql-common from ubuntu repo
-  apt:
-    pkg:
-      - mysql-common
-
-
 - name: import repository key
   apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=BC19DDBA
   when: "'sql' in group_names"    
@@ -68,12 +62,8 @@
 
 - name: install pip-dependenced packets
   pip:
-    name: "{{ item }}"
+    name: ['pip', 'mysql-connector']
     state: forcereinstall
-  with_items:
-    - pip
-#    - MySQL-python
-    - mysql-connector
   when: "'sql' in group_names"
 
 
