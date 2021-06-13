@@ -1,0 +1,6 @@
+---
+- hosts: sql
+  gather_facts: no
+  roles:
+    - role: sql
+      tags: [sql]
