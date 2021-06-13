@@ -109,6 +109,14 @@
     seconds: 10
 
 
+- name: Sed 0 to 1 to allow bootstrap
+  shell: sed -i 's/safe_to_bootstrap: 0/safe_to_bootstrap: 1/' /var/lib/mysql/grastate.dat
+  when: inventory_hostname == groups['sql'][0]
+  any_errors_fatal: true
+  tags:
+    - start_cluster
+
+
 - name: Bootstarping Primary Mysql Node
   shell: /usr/bin/mysqld_bootstrap
   when: inventory_hostname == groups['sql'][0]
@@ -138,7 +146,14 @@
   any_errors_fatal: true
   tags:
     - start_cluster 
+
    
+- name: Wait 10 seconds after starting slave Mysql Nodes
+  pause:
+    seconds: 10
+  tags:
+    - start_cluster
+
 
 # TODO: sqlproxy
 #- name: install haproxy
