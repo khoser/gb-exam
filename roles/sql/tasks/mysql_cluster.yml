@@ -24,12 +24,16 @@
 
 
 - name: create a preference file for galera repository. 
-  blockinfile: | 
-    create=yes
-    dest=/etc/apt/preferences.d/mysql-galera-cluster.pref
-    content="Package: *
-             Pin: origin releases.galeracluster.com
-             Pin-Priority: 1001"
+  copy:
+    dest: /etc/apt/preferences.d/galera.pref
+    content: |
+      # Prefer Codership repository
+      Package: *
+      Pin: origin releases.galeracluster.com
+      Pin-Priority: 1001
+#  file:
+#    src: galera.pref
+#    dest: /etc/apt/preferences.d/galera.pref
   when: "'sql' in group_names"
 
 
