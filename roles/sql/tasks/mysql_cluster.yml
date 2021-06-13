@@ -110,7 +110,7 @@
 
 
 - name: Sed 0 to 1 to allow bootstrap
-  shell: sed -i 's/safe_to_bootstrap: 0/safe_to_bootstrap: 1/' /var/lib/mysql/grastate.dat
+  shell: "sed -i 's/safe_to_bootstrap: 0/safe_to_bootstrap: 1/' /var/lib/mysql/grastate.dat"
   when: inventory_hostname == groups['sql'][0]
   any_errors_fatal: true
   tags:
