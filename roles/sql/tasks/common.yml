@@ -1,5 +1,8 @@
-- name: Install mc, htop
+- name: Install mc, htop, etc...
   apt:
     pkg:
+      - ntp
       - mc
       - htop
+      - gnupg
+      - software-properties-common
