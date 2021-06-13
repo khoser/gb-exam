@@ -62,7 +62,7 @@
 
 - name: install pip-dependenced packets
   pip:
-    name: ['pip', 'mysql-connector']
+    name: ['pip', 'mysql-connector', 'PyMySQL']
     state: forcereinstall
   when: "'sql' in group_names"
 
@@ -117,6 +117,14 @@
     - start_cluster
 
 
+- name: Start Primary Mysql node
+  systemd: state=started name=mysql
+  when: inventory_hostname == groups['sql'][0]
+  any_errors_fatal: true
+  tags:
+    - start_cluster 
+
+
 - name: Wait 10 seconds after bootstarping Primary Mysql Node
   pause:
     seconds: 10
@@ -168,8 +176,8 @@
     update_password: always
   when: inventory_hostname == groups['sql'][0]
   with_items:
-    - "{{ hostvars[groups['app'][0]]['ansible_default_ipv4']['address'] }}"
-    - "{{ hostvars[groups['app'][1]]['ansible_default_ipv4']['address'] }}"
+    - "{{ hostvars[groups['app'][0]]['ansible-host'] }}"
+    - "{{ hostvars[groups['app'][1]]['ansible-host'] }}"
     - 127.0.0.1
     - "localhost"
 
