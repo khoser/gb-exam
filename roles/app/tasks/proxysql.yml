@@ -1,0 +1,29 @@
+
+- name: get-url
+  get_url:
+    url: https://repo.proxysql.com/ProxySQL/repo_pub_key
+    dest: /tmp/proxysql.key
+
+
+- name: Add ProxySQL APT signing key
+  apt_key:
+    state: present
+    #file: /tmp/proxysql.key
+    url: https://repo.proxysql.com/ProxySQL/repo_pub_key
+  become: true
+
+
+- name: Add ProxySQL APT repository
+  apt_repository:
+    repo: deb http://repo.proxysql.com/ProxySQL/proxysql-2.2.x/{{ ansible_distribution_release }}/ ./
+    state: present
+
+
+- name: install proxysql
+  apt:
+    pkg:
+      - proxysql
+    update_cache: yes
+
+
+    
