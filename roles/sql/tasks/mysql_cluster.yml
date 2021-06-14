@@ -148,9 +148,9 @@
     - start_cluster 
 
    
-- name: Wait 10 seconds after starting slave Mysql Nodes
+- name: Wait 30 seconds after starting slave Mysql Nodes
   pause:
-    seconds: 10
+    seconds: 30
   tags:
     - start_cluster
 
