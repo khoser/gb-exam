@@ -1,0 +1,16 @@
+[mysqld]
+binlog_format=ROW
+default-storage-engine=innodb
+innodb_autoinc_lock_mode=2
+bind-address=0.0.0.0
+# Galera Cluster Config
+wsrep_on=ON
+wsrep_provider=/usr/lib/galera/libgalera_smm.so
+wsrep_cluster_name="{{ mysql_cluster_name }}"
+wsrep_cluster_address="gcomm://{% for server in groups['sql'] %}{{hostvars[server]['ansible_facts']['default_ipv4']['address']}},{% endfor %}"
+# wsrep_cluster_address="gcomm://{{ groups['sql'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
+# wsrep_cluster_address="gcomm://{% set IP_ARR=[] %}{% for host in groups['sql'] %}{% if IP_ARR.insert(loop.index,hostvars[host]['ansible_ssh_host']) %}{% endif %}{% endfor %}{{IP_ARR|join(',')}}"
+wsrep_sst_method=rsync
+# wsrep_node_address="{{ ansible_default_ipv4.address }}"
+wsrep_node_address="{{ ansible_ssh_host }}"
+wsrep_node_name="{{ inventory_hostname }}"
