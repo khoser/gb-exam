@@ -1,0 +1,7 @@
+---
+# vars file for app
+mysql_cluster_name: exam_mysql_cluster
+mysql_root_password: "Pa$$w0rd"
+proxysql_monitor_password: "Ma$$w0rd"
+proxysql_sammy_password: "Sa$$w0rd"
+

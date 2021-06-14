@@ -2,6 +2,10 @@
 # tasks file for firstrun
 - name: Update all packages to their latest version
   apt:
+    name: ntp
+
+- name: Update all packages to their latest version
+  apt:
     name: "*"
     state: latest
     update_cache: yes

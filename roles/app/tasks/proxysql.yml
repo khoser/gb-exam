@@ -1,14 +1,14 @@
 
-- name: get-url
-  get_url:
-    url: https://repo.proxysql.com/ProxySQL/repo_pub_key
-    dest: /tmp/proxysql.key
+#- name: get-url
+#  get_url:
+#    url: https://repo.proxysql.com/ProxySQL/repo_pub_key
+#    dest: /tmp/proxysql.key
 
 
 - name: Add ProxySQL APT signing key
   apt_key:
     state: present
-    #file: /tmp/proxysql.key
+#    file: /tmp/proxysql.key
     url: https://repo.proxysql.com/ProxySQL/repo_pub_key
   become: true
 
@@ -26,4 +26,46 @@
     update_cache: yes
 
 
-    
+#- name: Copy proxysql.cfg
+#  template:
+#    src: proxysql.j2
+#    dest: /etc/proxysql.cnf
+
+
+#- name: Init proxy
+#  shell: systemctl stop proxysql
+
+
+#- name: Init proxy
+#  shell: systemctl start proxysql-initial
+
+
+- name: start proxysql service
+  systemd: state=restarted name=proxysql
+
+- name: proxysql_backend_servers
+  proxysql_backend_servers:
+    login_user: 'admin'
+    login_password: 'admin'
+    hostname: '{{ item  }}'
+    hostgroup_id: 0
+    state: present
+    load_to_runtime: yes
+  with_items:
+    - "{{ hostvars[groups['sql'][0]]['ansible-host'] }}"
+    - "{{ hostvars[groups['sql'][1]]['ansible-host'] }}"
+    - "{{ hostvars[groups['sql'][2]]['ansible-host'] }}"
+
+
+- name: proxysql_mysql_users
+  proxysql_mysql_users:
+    login_user: 'admin'
+    login_password: 'admin'
+    username: 'root'
+    password: '{{ mysql_root_password }}'
+    frontend: yes
+    backend: yes
+    state: present
+    load_to_runtime: yes
+
+
