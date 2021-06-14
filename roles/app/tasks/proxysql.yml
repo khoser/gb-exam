@@ -66,7 +66,7 @@
     login_password: 'admin'
     login_host: '127.0.0.1'
     login_port: 6032
-    username: 'root'
+    username: 'root1'
     password: '{{ mysql_root_password }}'
     frontend: yes
     backend: yes
