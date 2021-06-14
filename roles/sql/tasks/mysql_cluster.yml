@@ -238,7 +238,7 @@
 
 # TODO: sqlproxy
 - name: Testing cluster status by connecting to sql[0]
-  shell: mysql -h {{ hostvars[groups['sql'][0]]['ansible-host'] }} -u root -p{{ mysql_root_password }} -e "SHOW STATUS LIKE 'wsrep_cluster_size'" | grep 'wsrep_cluster_size' '
+  shell: mysql -h {{ hostvars[groups['sql'][0]]['ansible-host'] }} -u root -p{{ mysql_root_password }} -e "SHOW STATUS LIKE 'wsrep_cluster_size'" | grep 'wsrep_cluster_size'
   when: inventory_hostname == groups['sql'][0]
   run_once: true
   register: cluster_status
