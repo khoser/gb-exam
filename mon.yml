@@ -4,3 +4,10 @@
   roles:
     - role: mon
       tags: [mon]
+
+- hosts: mon
+  gather_facts: yes
+  vars_files:
+    - group_vars/mon.yml #В этом файле список портов, которые нужно открыть
+  roles:
+    - role: firewall

@@ -1,0 +1,3 @@
+Для того, чтобы добавить новые публичные ssh-ключи для пользователя root, нужно прописать их в `files/public_ssh_keys/adduser.pub` и изменить значение `add_user_flag` в соответствующем файле в group_vars на `true`.
+
+Для того, чтобы удалить существующие публичные ssh-ключи для пользователя root, нужно прописать их в `files/public_ssh_keys/removeuser.pub` и изменить значение `remove_user_flag` в соответствующем файле в group_vars на `true`.
