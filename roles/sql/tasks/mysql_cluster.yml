@@ -54,7 +54,7 @@
       - galera-arbitrator-4
       - mysql-wsrep-8.0
       - rsync 
-#      - python-mysqldb
+      - python3-pymysql
       - python3-pip
     update_cache: yes
   when: "'sql' in group_names"
@@ -62,7 +62,7 @@
 
 - name: install pip-dependenced packets
   pip:
-    name: ['pip', 'mysql-connector', 'PyMySQL']
+    name: ['pip', 'mysql-connector', 'PyMySQL', 'cryptography']
     state: forcereinstall
   when: "'sql' in group_names"
 
@@ -109,14 +109,6 @@
     seconds: 10
 
 
-- name: Sed 0 to 1 to allow bootstrap
-  shell: "sed -i 's/safe_to_bootstrap: 0/safe_to_bootstrap: 1/' /var/lib/mysql/grastate.dat"
-  when: inventory_hostname == groups['sql'][0]
-  any_errors_fatal: true
-  tags:
-    - start_cluster
-
-
 - name: Bootstarping Primary Mysql Node
   shell: /usr/bin/mysqld_bootstrap
   when: inventory_hostname == groups['sql'][0]
@@ -125,12 +117,20 @@
     - start_cluster
 
 
-- name: Start Primary Mysql node
-  systemd: state=started name=mysql
-  when: inventory_hostname == groups['sql'][0]
-  any_errors_fatal: true
-  tags:
-    - start_cluster 
+#- name: Sed 0 to 1 to allow bootstrap
+#  shell: "sed -i 's/safe_to_bootstrap: 0/safe_to_bootstrap: 1/' /var/lib/mysql/grastate.dat"
+#  when: inventory_hostname == groups['sql'][0]
+#  any_errors_fatal: true
+#  tags:
+#    - start_cluster
+
+
+#- name: Start Primary Mysql node
+#  systemd: state=started name=mysql
+#  when: inventory_hostname == groups['sql'][0]
+#  any_errors_fatal: true
+#  tags:
+#    - start_cluster 
 
 
 - name: Wait 10 seconds after bootstarping Primary Mysql Node
@@ -177,10 +177,30 @@
 
 # Set mysql root user password and only allow access to root user from loadbalancer IP and localhost
 
+- name: Change the authentication plugin of MySQL root user to mysql_native_password
+  shell: mysql -u root -e 'UPDATE mysql.user SET plugin="mysql_native_password" WHERE user="root" AND host="localhost"'
+  when: inventory_hostname == groups['sql'][0]
+
+
+- name: Flush Privileges
+  shell: mysql -u root -e 'FLUSH PRIVILEGES'
+  when: inventory_hostname == groups['sql'][0]
+
+
+- name: Set MySQL root password
+  mysql_user:
+    login_host: 'localhost'
+    login_user: 'root'
+    login_password: ''
+    name: 'root'
+    password: '{{ mysql_root_password }}'
+    state: present
+  when: inventory_hostname == groups['sql'][0]
+
 
 - name: Set mysql root user password and only allow access to root user from loadbalancer IP and localhost
   mysql_user: 
-    name: root
+    name: root1
     host: '{{ item }}'
     check_implicit_admin: yes
     login_user: root
@@ -195,6 +215,8 @@
     - "{{ hostvars[groups['app'][1]]['ansible-host'] }}"
     - 127.0.0.1
     - "localhost"
+    - "{{ hostvars[groups['sql'][0]]['ansible-host'] }}"
+
 
 # TODO: sqlproxy, app[1]
 #- name: Create haproxy mysql user to perform basic health checks 
@@ -215,20 +237,20 @@
 
 
 # TODO: sqlproxy
-#- name: Testing cluster status by connecting to load balancer
-#  shell: mysql -h {{ hostvars[groups['app'][0]]['ansible_default_ipv4']['address'] }} -u root -p{{ mysql_root_password }} -e "SHOW STATUS LIKE 'wsrep_cluster_size'" | grep 'wsrep_cluster_size' | awk '{print $2}'
-#  when: inventory_hostname == groups['app'][0]
-#  run_once: true
-#  register: cluster_status
+- name: Testing cluster status by connecting to sql[0]
+  shell: mysql -h {{ hostvars[groups['sql'][0]]['ansible-host'] }} -u root -p{{ mysql_root_password }} -e "SHOW STATUS LIKE 'wsrep_cluster_size'" | grep 'wsrep_cluster_size' '
+  when: inventory_hostname == groups['sql'][0]
+  run_once: true
+  register: cluster_status
 
 
 # TODO: sqlproxy
-#- name: Test status
-#  debug: 
-#    msg:
-#      - " Test connection successfull"
-#      - " Total number of active mysql nodes in cluster: '{{ cluster_status.stdout }} '"
-#      - " Setup Completed!"
-#  when: inventory_hostname == groups['app'][0] 
-#  run_once: true
+- name: Test status
+  debug: 
+    msg:
+      - " Test connection successfull"
+      - " Total number of active mysql nodes in cluster: '{{ cluster_status.stdout }} '"
+      - " Setup Completed!"
+  when: inventory_hostname == groups['sql'][0] 
+  run_once: true
 
