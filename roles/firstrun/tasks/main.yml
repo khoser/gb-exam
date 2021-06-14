@@ -1,8 +1,11 @@
 ---
 # tasks file for firstrun
-- name: Update all packages to their latest version
+- name: Install ntp to sync datetime after restore
   apt:
     name: ntp
+
+- name: Restart ntp if it was installed before previous step
+  systemd: state=restarted name=ntp
 
 - name: Update all packages to their latest version
   apt:

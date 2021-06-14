@@ -47,10 +47,13 @@
   proxysql_backend_servers:
     login_user: 'admin'
     login_password: 'admin'
+    login_host: '127.0.0.1'
+    login_port: 6032
     hostname: '{{ item  }}'
-    hostgroup_id: 0
+    hostgroup_id: 1
     state: present
     load_to_runtime: yes
+    save_to_disk: yes
   with_items:
     - "{{ hostvars[groups['sql'][0]]['ansible-host'] }}"
     - "{{ hostvars[groups['sql'][1]]['ansible-host'] }}"
@@ -61,11 +64,54 @@
   proxysql_mysql_users:
     login_user: 'admin'
     login_password: 'admin'
+    login_host: '127.0.0.1'
+    login_port: 6032
     username: 'root'
     password: '{{ mysql_root_password }}'
     frontend: yes
     backend: yes
     state: present
     load_to_runtime: yes
+    save_to_disk: yes
+# можно уточнить предполагаемую нагрузку
+#    max_connections: 10000
+# нужно почитать поглубже про это
+#    transaction_persistent: false
 
+
+- name: proxysql_replication_hostgroups
+  proxysql_global_variables:
+    login_user: 'admin'
+    login_password: 'admin'
+    login_host: '127.0.0.1'
+    login_port: 6032
+    writer_hostgroup: 1
+    reader_hostgroup: 2
+    state: present
+    save_to_disk: yes
+
+
+- name: proxysql_manage_config
+  proxysql_manage_config:
+    login_user: 'admin'
+    login_password: 'admin'
+    login_host: '127.0.0.1'
+    login_port: 6032
+
+
+- name: proxysql_global_variables
+  proxysql_global_variables:
+    login_user: 'admin'
+    login_password: 'admin'
+    login_host: '127.0.0.1'
+    login_port: 6032
+
+
+#  для начала нам пока ненужно (тюнинг)
+#- name:  proxysql_query_rules
+#   proxysql_query_rules:
+#    login_user: 'admin'
+#    login_password: 'admin'
+#    login_host: '127.0.0.1'
+#    login_port: 6032
 
