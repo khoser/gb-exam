@@ -4,70 +4,9 @@
   hosts: localhost
   tasks:
 
-  - name: Install proxysql
-    apt:
-      deb: https://github.com/sysown/proxysql/releases/download/v2.2.0/proxysql_2.2.0-ubuntu20_amd64.deb
-#     deb: https://github.com/sysown/proxysql/releases/download/v2.2.0/proxysql_2.2.0-ubuntu20_arm64.deb 
-
-#  - name: lsb-release
-#    apt: 
-#      pkg: lsb-release
-
-  - name: Add key
-    apt_key:
-       url: https://repo.proxysql.com/ProxySQL/repo_pub_key
-       state: present
-
-  - name: Add repositories proxysql
-    apt_repository:
-      repo: deb https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/{{ ansible_distribution_release | lower }}/ ./
- #        repo: deb https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/focal/proxysql_2.2.0-ubuntu20_amd64.deb
-      state: present
-      filename: proxysql
-      install_python_apt: yes
-      update_cache: yes   
-
-
-  - name: create a preference file for galera repository. 
-    copy:
-      dest: /etc/apt/sources.list.d/proxysql.list
-      content: |
-        deb https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/${{ ansible_distribution_release | lower }}/ ./
-
-
-  - name: Install mysql-client
-    apt:
-       pkg: proxysql mysql-client
-
-
-
-
-
-
-
-
- 
- 
-
- 
-     
- #  - name: Create file sources list d 
- #    shell: "wget -O - 'https://repo.proxysql.com/ProxySQL/repo_pub_key' | apt-key add - echo deb https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/$(lsb_release -sc)/ ./ | tee /etc/apt/sources.list.d/proxysql.list"
- #    args:
- #       executable: /bin/bash          
- 
- #  - name: Add repositories proxysql
- #    apt:
-      # deb: https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/{{ ansible_distribution_release | lower }} 
-  #     deb: https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/focal/proxysql_2.2.0-ubuntu20_amd64.deb
-       
-#   - name: Update and upgrade apt packages
-#     become: true
-#     apt:
-#       update_cache: yes
-#       upgrade: 'yes'
-
-  - name: Install proxysql
-    apt:
-      pkg: proxysql
-      update_cache: yes
+  - proxysql_backend_servers:
+    login_user: 'admin'
+    login_password: 'admin'
+    hostname: 'mysql01'
+    state: present
+    load_to_runtime: False
