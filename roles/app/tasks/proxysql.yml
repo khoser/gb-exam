@@ -122,3 +122,25 @@
 #    login_host: '127.0.0.1'
 #    login_port: 6032
 
+- name: Testing cluster status by connecting to proxysql
+  mysql_info:
+    login_user: root1
+    login_password: '{{ mysql_root_password }}'
+    login_host: "{{ ansible_facts['default_ipv4']['address'] }}"
+    login_port: 6033
+  register: server_info
+#  when: inventory_hostname == groups['sql'][0]
+
+
+- name: Extract mysql-cluster nodes count
+  shell: echo "{{ server_info }}" | sed 's/,/\n/g' | grep 'wsrep_cluster_size'
+  register: cluster_status
+#  when: inventory_hostname == groups['sql'][0]
+
+- name: Test status
+  debug:
+    msg:
+      - " Test connection successfull"
+      - " Total number of active mysql nodes in cluster: '{{ cluster_status.stdout_lines[0] }} '"
+      - " Setup Completed!"
+
