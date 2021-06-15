@@ -7,5 +7,6 @@ firewall_allowed_tcp_ports:
   - 22
   - 4444
   - 4567
+  - 4568
   - 3306
   - 6032

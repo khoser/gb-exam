@@ -25,9 +25,6 @@
       Package: *
       Pin: origin releases.galeracluster.com
       Pin-Priority: 1001
-#  file:
-#    src: galera.pref
-#    dest: /etc/apt/preferences.d/galera.pref
   when: "'sql' in group_names"
 
 
