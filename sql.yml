@@ -1,14 +1,16 @@
 ---
 - hosts: sql
   gather_facts: yes
+  vars_files:
+    - group_vars/sql.yml #В этом файле список портов, которые нужно открыть
+  roles:
+    - role: firewall
+
+
+- hosts: sql
+  gather_facts: yes
   #serial: 1
   roles:
     - role: sql
       tags: [sql]
 
-- hosts: sql
-  gather_facts: yes
-  vars_files:
-    - group_vars/sql.yml #В этом файле список портов, которые нужно открыть
-  roles:
-    - role: firewall
