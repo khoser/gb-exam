@@ -1,5 +1,10 @@
 - name: common
   import_tasks: common.yml
 
+
+- name: manage users
+  import_tasks: users.yml
+
+
 - name: mysql_cluster
   import_tasks: mysql_cluster.yml
