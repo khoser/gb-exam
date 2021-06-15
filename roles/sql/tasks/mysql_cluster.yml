@@ -155,26 +155,6 @@
     - start_cluster
 
 
-# TODO: sqlproxy
-#- name: install haproxy
-#  apt:
-#    name: '{{item}}'
-#    update_cache: yes
-#  with_items:
-#    - haproxy
-#    - python-mysqldb
-#  when: "'app' in group_names"
-
-
-# TODO: sqlproxy
-#- name: add mysql nodes to haproxy Configuration file
-#  template:
-#    src: haproxy-config.j2
-#    dest: /etc/haproxy/haproxy.cfg
-#    validate: 'haproxy -c -f %s'
-#  when: "'app' in group_names"
-
-
 # Set mysql root user password and only allow access to root user from loadbalancer IP and localhost
 
 - name: Change the authentication plugin of MySQL root user to mysql_native_password
@@ -218,39 +198,26 @@
     - "{{ hostvars[groups['sql'][0]]['ansible-host'] }}"
 
 
-# TODO: sqlproxy, app[1]
-#- name: Create haproxy mysql user to perform basic health checks 
-#  mysql_user:
-#    name: haproxy
-#    host: "{{ hostvars[groups['app'][0]]['ansible_default_ipv4']['address'] }}"
-#    state: present
-#    check_implicit_admin: yes
-#    login_user: root
-#    login_password: '{{ mysql_root_password }}'
-#  when: inventory_hostname == groups['sql'][0]
-
-
-# TODO: sqlproxy
-#- name: Restart haproxy
-#  systemd: state=restarted name=haproxy
-#  when: "'app' in group_names"
-
-
-# TODO: sqlproxy
 - name: Testing cluster status by connecting to sql[0]
-  shell: mysql -h {{ hostvars[groups['sql'][0]]['ansible-host'] }} -u root1 -p{{ mysql_root_password }} -e "SHOW STATUS LIKE 'wsrep_cluster_size'" | grep 'wsrep_cluster_size'
+  mysql_info:
+    login_user: root1
+    login_password: '{{ mysql_root_password }}'
+    login_host: "{{ ansible_facts['default_ipv4']['address'] }}"
+  register: server_info
   when: inventory_hostname == groups['sql'][0]
-  run_once: true
+
+
+- name: Extract mysql-cluster nodes count
+  shell: echo "{{ server_info }}" | sed 's/,/\n/g' | grep 'wsrep_cluster_size'
   register: cluster_status
+  when: inventory_hostname == groups['sql'][0]
 
 
-# TODO: sqlproxy
 - name: Test status
   debug: 
     msg:
       - " Test connection successfull"
-      - " Total number of active mysql nodes in cluster: '{{ cluster_status.stdout }} '"
+      - " Total number of active mysql nodes in cluster: '{{ cluster_status.stdout_lines[0] }} '"
       - " Setup Completed!"
   when: inventory_hostname == groups['sql'][0] 
-  run_once: true
 
