@@ -4,7 +4,7 @@
     state: present
     key: '{{ item }}'
   with_file:
-    - public_keys/adduser.pub
+    - public_ssh_keys/adduser.pub
   when: add_user_flag
 
 - name: Remove users from authorized keys
@@ -13,5 +13,6 @@
     state: absent
     key: '{{ item }}'
   with_file:
-    - public_keys/removeuser.pub
+    - public_ssh_keys/removeuser.pub
   when: remove_user_flag
+

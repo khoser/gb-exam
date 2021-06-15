@@ -4,3 +4,10 @@
   roles:
     - role: app
       tags: [app]
+
+- hosts: app
+  gather_facts: yes
+  vars_files:
+    - group_vars/app.yml #В этом файле список портов, которые нужно открыть
+  roles:
+    - role: firewall
