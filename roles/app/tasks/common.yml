@@ -1,0 +1,9 @@
+- name: Install mc, htop
+  apt:
+    pkg:
+      - mc
+      - htop
+      - gnupg
+      - ntp
+      - mysql-client
+      - python3-pymysql
