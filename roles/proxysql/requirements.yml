@@ -1,4 +1,0 @@
----
-collections:
-  - name: community.proxysql
-    version: v1.0.0
