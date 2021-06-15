@@ -191,11 +191,11 @@
     update_password: always
   when: inventory_hostname == groups['sql'][0]
   with_items:
-    - "{{ hostvars[groups['app'][0]]['ansible-host'] }}"
-    - "{{ hostvars[groups['app'][1]]['ansible-host'] }}"
+    - "{{ hostvars[groups['app'][0]]['ansible_default_ipv4']['address'] }}"
+    - "{{ hostvars[groups['app'][1]]['ansible_default_ipv4']['address'] }}"
     - 127.0.0.1
     - "localhost"
-    - "{{ hostvars[groups['sql'][0]]['ansible-host'] }}"
+    - "{{ hostvars[groups['sql'][0]]['ansible_default_ipv4']['address'] }}"
 
 
 - name: Testing cluster status by connecting to sql[0]
