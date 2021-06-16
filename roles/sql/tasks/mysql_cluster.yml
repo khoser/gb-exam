@@ -44,12 +44,20 @@
   when: "'sql' in group_names"
 
 
+- name: install Mysql-server 8.0
+  apt:
+    pkg:
+      - mysql-wsrep-8.0
+    update_cache: yes
+  when: "'sql' in group_names"
+  register: mysql_install
+
+
 - name: install Mysql-server 8.0 and Galera Cluster packages
   apt:
     pkg:
       - galera-4
       - galera-arbitrator-4
-      - mysql-wsrep-8.0
       - rsync 
       - python3-pymysql
       - python3-pip
@@ -106,20 +114,23 @@
     seconds: 10
 
 
+- name: Check that the /var/lib/mysql/grastate.dat exists
+  stat:
+    path: /var/lib/mysql/grastate.dat
+  when: inventory_hostname == groups['sql'][0]
+  register: grastate_exists
+
+
+- name: Sed 0 to 1 to allow bootstrap
+  shell: "sed -i 's/safe_to_bootstrap: 0/safe_to_bootstrap: 1/' /var/lib/mysql/grastate.dat"
+  when: inventory_hostname == groups['sql'][0] and grastate_exists.stat.exists
+  any_errors_fatal: true
+
+
 - name: Bootstarping Primary Mysql Node
   shell: /usr/bin/mysqld_bootstrap
   when: inventory_hostname == groups['sql'][0]
   any_errors_fatal: true
-  tags:
-    - start_cluster
-
-
-#- name: Sed 0 to 1 to allow bootstrap
-#  shell: "sed -i 's/safe_to_bootstrap: 0/safe_to_bootstrap: 1/' /var/lib/mysql/grastate.dat"
-#  when: inventory_hostname == groups['sql'][0]
-#  any_errors_fatal: true
-#  tags:
-#    - start_cluster
 
 
 #- name: Start Primary Mysql node
@@ -156,12 +167,12 @@
 
 - name: Change the authentication plugin of MySQL root user to mysql_native_password
   shell: mysql -u root -e 'UPDATE mysql.user SET plugin="mysql_native_password" WHERE user="root" AND host="localhost"'
-  when: inventory_hostname == groups['sql'][0]
+  when: inventory_hostname == groups['sql'][0] and mysql_install is changed
 
 
 - name: Flush Privileges
   shell: mysql -u root -e 'FLUSH PRIVILEGES'
-  when: inventory_hostname == groups['sql'][0]
+  when: inventory_hostname == groups['sql'][0] and mysql_install is changed
 
 
 - name: Set MySQL root password
@@ -172,7 +183,7 @@
     name: 'root'
     password: '{{ mysql_root_password }}'
     state: present
-  when: inventory_hostname == groups['sql'][0]
+  when: inventory_hostname == groups['sql'][0] and mysql_install is changed
 
 
 - name: Set mysql root user password and only allow access to root user from loadbalancer IP and localhost
@@ -186,7 +197,7 @@
     priv: '*.*:ALL'
     state: present
     update_password: always
-  when: inventory_hostname == groups['sql'][0]
+  when: inventory_hostname == groups['sql'][0] and mysql_install is changed
   with_items:
     - "{{ hostvars[groups['app'][0]]['ansible_default_ipv4']['address'] }}"
     - "{{ hostvars[groups['app'][1]]['ansible_default_ipv4']['address'] }}"

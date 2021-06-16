@@ -3,9 +3,11 @@
 - name: Install ntp to sync datetime after restore
   apt:
     name: ntp
+  regitster: ntp_ok
 
 - name: Restart ntp if it was installed before previous step
   systemd: state=restarted name=ntp
+  when: ntp_ok is succeeded and ntp_ok is not changed
 
 - name: Update all packages to their latest version
   apt:
