@@ -206,6 +206,11 @@
     - "{{ hostvars[groups['sql'][0]]['ansible_default_ipv4']['address'] }}"
 
 
+- name: Enabling mysql systemd unit
+  systemd: name=mysql enabled=yes
+  when: "'sql' in group_names"
+
+
 - name: Testing cluster status by connecting to sql[0]
   mysql_info:
     login_user: root1
