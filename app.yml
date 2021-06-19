@@ -1,9 +1,9 @@
 ---
-- hosts: app
-  gather_facts: yes
-  roles:
-    - role: app
-      tags: [app]
+# - hosts: app
+#   gather_facts: yes
+#   roles:
+#     - role: app
+#       tags: [app]
 
 - hosts: app
   gather_facts: yes
@@ -11,3 +11,7 @@
     - group_vars/app.yml #В этом файле список портов, которые нужно открыть
   roles:
     - role: firewall
+
+- hosts: app
+  roles:
+    - role: node-exporter

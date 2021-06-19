@@ -1,9 +1,9 @@
 ---
-- hosts: mon
-  gather_facts: no
-  roles:
-    - role: mon
-      tags: [mon]
+# - hosts: mon
+#   gather_facts: no
+#   roles:
+#     - role: mon
+#       tags: [mon]
 
 - hosts: mon
   gather_facts: yes
@@ -11,3 +11,18 @@
     - group_vars/mon.yml #В этом файле список портов, которые нужно открыть
   roles:
     - role: firewall
+
+- hosts: mon
+  roles:
+  - prometheus
+  vars:
+    prometheus_targets:
+      node:
+      - targets:
+        - 10.0.0.17:9100 #Тут надо перечислить все хосты
+        labels:
+          env: vektoroo
+
+- hosts: mon
+  roles:
+    - role: mon-nginx
