@@ -77,16 +77,14 @@ nginx_vhosts: []
 #   extra_parameters: "" # Can be used to add extra config blocks (multiline).
 #   template: "" # Can be used to override the `nginx_vhost_template` per host.
 #   state: "absent" # To remove the vhost configuration.
-
+{{ ansible_managed }}
 nginx_upstreams: []
  - name: myapp1
 #   strategy: "ip_hash" # "least_conn", etc.
 #   keepalive: 16 # optional
    servers: {
-     "{{ item }}" "{% if item == inventory_hostname  %} ' ' {% else %} ' backup ' {% endif %}" "{% if item == hostvars[groups['app'][0]  %} ' ' {% else %} ', ' {% endif %}"
-     with_items: { hostvars[groups['app'] | reverse }
-#     "localhost",
-#     "{{}}backend",
+     "10.0.0.17",
+     "10.0.0.5 backend",
 #     "srv3.example.com"
    }
 
