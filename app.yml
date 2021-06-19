@@ -12,13 +12,13 @@
   roles:
     - role: firewall
 
-- hosts: 192.168.234.129
+- hosts: app
   gather_facts: yes
   roles:
     - role: nginx_role
       tags: [nginx]
 
-- hosts: 192.168.234.129
+- hosts: app
   gather_facts: yes
   roles:
     - role: php_role
