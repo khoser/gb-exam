@@ -1,7 +1,7 @@
 Ansible Role: grafana
 
 ```yaml
-- hosts: all
+- hosts: localhost
   roles:
     - role: cloudalchemy.grafana
       vars:
