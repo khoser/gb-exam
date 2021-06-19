@@ -2,3 +2,4 @@
 - import_playbook: sql.yml
 - import_playbook: app.yml
 - import_playbook: mon.yml
+- import_playbook: proxysql.yam

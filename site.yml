@@ -1,0 +1,26 @@
+- hosts: all
+  gather_facts: no
+  tasks:
+  - name: Install python
+    raw: "apt update && apt install -y python"
+
+- hosts: all
+  roles:
+    - cloudalchemy.node-exporter
+  tags:
+    - node_exporter
+
+- hosts: prometheus
+  roles:
+    - cloudalchemy.blackbox-exporter
+    - cloudalchemy.snmp-exporter
+    - cloudalchemy.prometheus
+    - cloudalchemy.alertmanager
+  tags:
+    - prometheus
+
+- hosts: grafana
+  roles:
+    - cloudalchemy.grafana
+  tags:
+    - grafana

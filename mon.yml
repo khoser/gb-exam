@@ -1,6 +1,53 @@
 ---
-- hosts: mon
-  gather_facts: no
+- hosts: localhost
   roles:
-    - role: mon
-      tags: [mon]
+  - prometheus
+  vars:
+    prometheus:
+      node:
+      - targets:
+        - localhost:9100
+#        - demo.cloudalchemy.org:9100
+        labels:
+          env: vektorooo
+
+- hosts: localhost
+  become: yes
+  roles:
+  - node-exporter
+
+- hosts: localhost
+  become: yes
+  roles:
+    - snmp-exporter
+
+- hosts: localhost
+  become: true
+  roles:
+    - blackbox-exporter
+
+#- hosts: localhost
+#  roles:
+#    - alertmanager
+#  vars:
+#    alertmanager_version: latest
+#    alertmanager_slack_api_url: "http://vektorooo.ru"
+#    alertmanager_receivers:
+#      - name: slack
+#        slack_configs:
+#          - send_resolved: true
+#            channel: '#alerts'
+#    alertmanager_route:
+#      group_by: ['alertname', 'cluster', 'service']
+#      group_wait: 30s
+#      group_interval: 5m
+#      repeat_interval: 3h
+#      receiver: slack
+
+- hosts: localhost
+  roles:
+    - role: grafana
+      vars:
+        grafana_security:
+          admin_user: admin
+          admin_password: admin

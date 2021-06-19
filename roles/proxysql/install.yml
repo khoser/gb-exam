@@ -1,73 +1,115 @@
----
-
-- name: proxysql
-  hosts: localhost
-  tasks:
-
-  - name: Install proxysql
-    apt:
-      deb: https://github.com/sysown/proxysql/releases/download/v2.2.0/proxysql_2.2.0-ubuntu20_amd64.deb
-#     deb: https://github.com/sysown/proxysql/releases/download/v2.2.0/proxysql_2.2.0-ubuntu20_arm64.deb 
-
-#  - name: lsb-release
-#    apt: 
-#      pkg: lsb-release
-
-  - name: Add key
-    apt_key:
-       url: https://repo.proxysql.com/ProxySQL/repo_pub_key
-       state: present
-
-  - name: Add repositories proxysql
-    apt_repository:
-      repo: deb https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/{{ ansible_distribution_release | lower }}/ ./
- #        repo: deb https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/focal/proxysql_2.2.0-ubuntu20_amd64.deb
-      state: present
-      filename: proxysql
-      install_python_apt: yes
-      update_cache: yes   
+#- name: get-url
+#  get_url:
+#    url: https://repo.proxysql.com/ProxySQL/repo_pub_key
+#    dest: /tmp/proxysql.key
 
 
-  - name: create a preference file for galera repository. 
-    copy:
-      dest: /etc/apt/sources.list.d/proxysql.list
-      content: |
-        deb https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/${{ ansible_distribution_release | lower }}/ ./
+- name: Add ProxySQL APT signing key
+  apt_key:
+    state: present
+#    file: /tmp/proxysql.key
+    url: https://repo.proxysql.com/ProxySQL/repo_pub_key
+  become: true
 
 
-  - name: Install mysql-client
-    apt:
-       pkg: proxysql mysql-client
+- name: Add ProxySQL APT repository
+  apt_repository:
+    repo: deb http://repo.proxysql.com/ProxySQL/proxysql-2.2.x/{{ ansible_distribution_release }}/ ./
+    state: present
 
 
+- name: install proxysql
+  apt:
+    pkg:
+      - proxysql
+    update_cache: yes
 
 
+#- name: Copy proxysql.cfg
+#  template:
+#    src: proxysql.j2
+#    dest: /etc/proxysql.cnf
 
 
+#- name: Init proxy
+#  shell: systemctl stop proxysql
 
 
+#- name: Init proxy
+#  shell: systemctl start proxysql-initial
+
+
+- name: start proxysql service
+  systemd: state=restarted name=proxysql
+
+- name: proxysql_backend_servers
+  proxysql_backend_servers:
+    login_user: 'admin'
+    login_password: 'admin'
+    login_host: '127.0.0.1'
+    login_port: 6032
+    hostname: '{{ item  }}'
+    hostgroup_id: 1
+    state: present
+    load_to_runtime: yes
+    save_to_disk: yes
+  with_items:
+    - "{{ hostvars[groups['sql'][0]]['ansible-host'] }}"
+    - "{{ hostvars[groups['sql'][1]]['ansible-host'] }}"
+    - "{{ hostvars[groups['sql'][2]]['ansible-host'] }}"
+
+
+- name: proxysql_mysql_users
+  proxysql_mysql_users:
+    login_user: 'admin'
+    login_password: 'admin'
+    login_host: '127.0.0.1'
+    login_port: 6032
+    username: 'root'
+    password: '{{ mysql_root_password }}'
+    frontend: yes
+    backend: yes
+    state: present
+    load_to_runtime: yes
+    save_to_disk: yes
+# можно уточнить предполагаемую нагрузку
+#    max_connections: 10000
+# нужно почитать поглубже про это
+#    transaction_persistent: false
+
+
+#- name: proxysql_replication_hostgroups 
+#  proxysql_global_variables:
+#    login_user: 'admin'
+#    login_password: 'admin'
+#    login_host: '127.0.0.1'
+#    login_port: 6032
+#    writer_hostgroup: 1
+#    reader_hostgroup: 2
+#    state: present    
+#    save_to_disk: yes    
+    
+    
+#- name: proxysql_manage_config 
+#  proxysql_manage_config:
+#    login_user: 'admin'
+#    login_password: 'admin'
+#    login_host: '127.0.0.1'
+#    login_port: 6032
+   
+   
+#- name: proxysql_global_variables 
+#  proxysql_global_variables:
+#    login_user: 'admin'
+#    login_password: 'admin'
+#    login_host: '127.0.0.1'
+#    login_port: 6032 
+    
  
- 
-
- 
-     
- #  - name: Create file sources list d 
- #    shell: "wget -O - 'https://repo.proxysql.com/ProxySQL/repo_pub_key' | apt-key add - echo deb https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/$(lsb_release -sc)/ ./ | tee /etc/apt/sources.list.d/proxysql.list"
- #    args:
- #       executable: /bin/bash          
- 
- #  - name: Add repositories proxysql
- #    apt:
-      # deb: https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/{{ ansible_distribution_release | lower }} 
-  #     deb: https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/focal/proxysql_2.2.0-ubuntu20_amd64.deb
-       
-#   - name: Update and upgrade apt packages
-#     become: true
-#     apt:
-#       update_cache: yes
-#       upgrade: 'yes'
-
-  - name: Install proxysql
-    apt:
-      pkg: proxysql
-      update_cache: yes
+#  для начала нам пока ненужно (тюнинг) 
+#- name:  proxysql_query_rules 
+#   proxysql_query_rules:
+#    login_user: 'admin'
+#    login_password: 'admin'
+#    login_host: '127.0.0.1'
+#    login_port: 6032
