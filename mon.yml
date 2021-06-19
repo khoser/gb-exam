@@ -11,7 +11,7 @@
         labels:
           env: vektorooo
 
-- hosts: localhost
+- hosts: all
   become: yes
   roles:
   - node-exporter
