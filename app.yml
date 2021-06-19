@@ -11,3 +11,15 @@
     - group_vars/app.yml #В этом файле список портов, которые нужно открыть
   roles:
     - role: firewall
+
+- hosts: app
+  gather_facts: yes
+  roles:
+    - role: nginx_role
+      tags: [nginx]
+
+- hosts: app
+  gather_facts: yes
+  roles:
+    - role: php_role
+      tags: [php]

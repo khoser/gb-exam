@@ -1,0 +1,4 @@
+- name: Install unison
+  apt:
+    pkg:
+      - unison
