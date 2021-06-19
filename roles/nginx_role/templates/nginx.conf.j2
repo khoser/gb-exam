@@ -3,6 +3,16 @@ user  {{ nginx_user }};
 error_log  {{ nginx_error_log }};
 pid        {{ nginx_pidfile }};
 
+{{ ansible_managed }}
+nginx_upstreams: []
+  - name: myapp01
+    servers: {
+    {% for host in groups['app'] %}
+      {{ hostvars[host]['ansible_host'] }} {% if hostvars[host]['slave'] | default(false) | bool %}backup{% endif %}
+
+    {% endfor %}
+    }
+
 {% block worker %}
 worker_processes  {{ nginx_worker_processes }};
 {% endblock %}
