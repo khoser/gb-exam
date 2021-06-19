@@ -1,9 +1,9 @@
 ---
-# - hosts: mon
-#   gather_facts: no
-#   roles:
-#     - role: mon
-#       tags: [mon]
+- hosts: mon
+  gather_facts: no
+  roles:
+    - role: mon
+      tags: [mon]
 
 - hosts: mon
   gather_facts: yes

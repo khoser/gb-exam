@@ -12,7 +12,7 @@ firewall_allowed_tcp_ports:
   - 9090 # Prometheus
 
 # Настройки доменного имени для хоста мониторинга
-monitoring_doman: mon.vektorooo.ru
+monitoring_domain: mon.vektorooo.ru
 
 
   

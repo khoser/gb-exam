@@ -3,6 +3,7 @@
     pkg:
       - mc
       - htop
+      - python3-jmespath
 
 - name: Add users into authorized keys
   authorized_key:
