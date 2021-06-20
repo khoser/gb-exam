@@ -56,14 +56,6 @@ http {
 
 {% block http_upstream %}
 
-nginx_upstreams: []
-- name: myapp01
-servers: {
-{% for host in groups['app'] %}
-{{ hostvars[host]['ansible_host'] }} {% if hostvars[host]['slave'] | default(false) | bool %}backup{% endif %}
-{% endfor %}
-}
-
 {% for upstream in nginx_upstreams %}
     upstream {{ upstream.name }} {
 {% if upstream.strategy is defined %}

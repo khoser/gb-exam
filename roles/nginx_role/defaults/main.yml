@@ -71,7 +71,7 @@ nginx_vhosts:
 #
 #   # Properties that are only added if defined:
 #   server_name_redirect: "www.example.com" # default: N/A
-   error_page: "500, 501, 502, 503, 504, 505, 507, 510"
+#   error_page: "500, 501, 502, 503, 504, 505, 507, 510"
 #   access_log: ""
 #   error_log: ""
 #   extra_parameters: "" # Can be used to add extra config blocks (multiline).
@@ -84,7 +84,7 @@ nginx_upstreams:
 #   keepalive: 16 # optional
    servers: {
      "10.0.0.17",
-     "10.0.0.5 backend",
+     "10.0.0.5 backup",
 #     "srv3.example.com"
    }
 
