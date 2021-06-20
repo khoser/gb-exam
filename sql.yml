@@ -7,10 +7,13 @@
     - role: firewall
 
 
-- hosts: sql
-  gather_facts: yes
-  #serial: 1
-  roles:
-    - role: sql
-      tags: [sql]
+      #- hosts: sql
+      #  gather_facts: yes
+      #  #serial: 1
+      #  roles:
+      #    - role: sql
+      #      tags: [sql]
 
+- hosts: sql
+  roles:
+    - role: node-exporter

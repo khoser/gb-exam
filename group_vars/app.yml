@@ -7,4 +7,4 @@ firewall_allowed_tcp_ports:
   - 22
   - 80
   - 443
-  - 9010 # Node-exporter
+  - 9100 # Node-exporter
