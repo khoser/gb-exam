@@ -8,7 +8,7 @@
 - name: Put backup script
   template:
     src: backup.j2
-    dest: '{{ mysql_backup_dir }}'/backup.sh
+    dest: "{{ mysql_backup_dir }}/backup.sh"
 
 
 - name: Crontab line
