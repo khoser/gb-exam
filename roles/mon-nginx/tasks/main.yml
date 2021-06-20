@@ -41,16 +41,27 @@
   # notify:
   #   - reload nginx
 
-- name: Copy monitoring-systems.conf file
+- name: Copy prometheus.conf file
   template:
-    src: monitoring-systems.conf.j2
-    dest: "{{ nginx_conf_path }}/monitoring-systems.conf"
+    src: prometheus.conf.j2
+    dest: "{{ nginx_conf_path }}/prometheus.conf"
+    owner: root
+    group: "{{ root_group }}"
+    mode: 0644
+    #notify:
+    #- reload nginx
+
+- name: Copy grafana.conf file
+  template:
+    src: grafana.conf.j2
+    dest: "{{ nginx_conf_path }}/grafana.conf"
     owner: root
     group: "{{ root_group }}"
     mode: 0644
   notify:
     - reload nginx
-
+   
+    
 - name: Ensure nginx service is running as configured.
   service:
     name: nginx
