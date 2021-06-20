@@ -1,0 +1,77 @@
+#!/bin/bash
+# Скрипт создания архивированного дампа БД MySQL
+
+# !!! Директории слешами НЕ закрывать  !!!
+BACKUPDIR={{ mysql_backup_dir }}  # /etc/backup/mysql
+# Максимально число хранимых архивов
+MAXNUMBER=3
+# Настройка подключения
+HOST="localhost"
+USER="root1"
+PASS='{{ mysql_root_password }}'
+# Перечень БД
+# DBLIST="db1 db2"; DBLIST="" все найденные
+DBLIST=""
+# Список исключенных БД (при DBLIST="")
+DBEXCLUDE="information_schema"
+
+
+NOWTIME=`date '+%Y-%m-%d %H:%M'`
+NOWDATE=`date '+%Y%m%d'`
+DOTNAME="\.sql\.bz2"
+ 
+# Сообщение по завершению выполнения
+function end_msg() {
+  echo "========== `date '+%Y-%m-%d %H:%M'` END backup-mysql =========="
+  echo ""
+}
+
+echo "========== `date '+%Y-%m-%d %H:%M'` START backup-mysql =========="
+if [ ! -d "$BACKUPDIR" ]; then
+  echo "Директория не верна"
+  end_msg
+  exit 0
+fi
+
+if [ -z "$DBLIST" ]; then
+  ################## Архивация всех БД ######################
+  # Получение массива имен БД
+  DBLIST=`mysql --user=$USER --password=$PASS --host=$HOST --batch --skip-column-names -e "show databases"`
+  # Исключение имен БД
+  for DBNAME in $DBEXCLUDE; do
+    DBLIST=`echo "$DBLIST" | sed "/^$DBNAME\$/d"`
+  done
+
+fi
+
+# Выполнение дампа
+for DBNAME in $DBLIST; do
+  echo "$DBNAME"
+  /usr/bin/mysqldump --routines --triggers --opt --user=$USER --password=$PASS --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
+  bzip2 -f $BACKUPDIR/$DBNAME.$NOWDATE.sql
+done
+############################################################
+
+####### Контроль количества файлов ##############
+FILELIST=`ls $BACKUPDIR | sed -e '/[0-9]\{8\}'$DOTNAME'$/!d'`
+FILENAMES=`echo "$FILELIST" | sed -e 's/\(^.*\)\([0-9]\{8\}'$DOTNAME'$\).*/\1/g' | sort -u`
+for CURRENT in $FILENAMES; do
+  # Получение списка дат для текущего архива на удаление
+  TEMP1=`echo "$FILELIST" | sed -e '/\(^'$CURRENT'\)\([0-9]\{8\}\)\('$DOTNAME'$\)/!d' -e 's/\(^'$CURRENT'\)\([0-9]\{8\}\)\('$DOTNAME'$\)/\2/g' | sort -rn`
+  TEMP1=`echo "$TEMP1" | sed -e '1,'$MAXNUMBER'd'`
+  #Склеивание
+  for TEMP2 in $TEMP1; do
+    DELETELIST=`echo $CURRENT$TEMP2${DOTNAME//\\\/} && echo "$DELETELIST"`
+  done
+  DELETELIST=`echo "$DELETELIST" | sed -e '/^$/d'`
+done
+if [ -n "$DELETELIST" ]; then
+  echo "========== Файлы будут удалены =========="
+  echo "$DELETELIST"
+fi
+for CURRENT in $DELETELIST; do
+  rm $BACKUPDIR/$CURRENT
+done
+
+end_msg
+exit 0
