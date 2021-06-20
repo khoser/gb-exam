@@ -18,10 +18,9 @@
   vars:
     prometheus_targets:
       node:
-      - targets:
-        - 10.0.0.17:9100 #Тут надо перечислить все хосты
-        labels:
-          env: vektoroo
+        - targets: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('regex_replace', '^(.*)$', '\\1:9100') | list }}"
+          labels:
+            env: vektoroo
 
 - hosts: mon
   roles:
