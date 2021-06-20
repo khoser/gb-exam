@@ -19,3 +19,12 @@
     user: root
     job: "{{ mysql_backup_dir }}/backup.sh >> {{ mysql_backup_dir }}/backup.log 2>&1"
 
+
+- name: Credentials
+  copy:
+    dest: /root/.my.cnf
+    content: |
+      [client]
+      user=root1
+      password={{ mysql_root_password }}
+

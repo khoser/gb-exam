@@ -7,8 +7,8 @@ BACKUPDIR=/home/backup/mysql
 MAXNUMBER=3
 # Настройка подключения
 HOST="localhost"
-USER="root1"
-PASS='{{ mysql_root_password }}'
+#USER="root1"
+#PASS=' mysql_root_password '
 # Перечень БД
 # DBLIST="db1 db2"; DBLIST="" все найденные
 DBLIST=""
@@ -36,7 +36,8 @@ fi
 if [ -z "$DBLIST" ]; then
   ################## Архивация всех БД ######################
   # Получение массива имен БД
-  DBLIST=`mysql --user=$USER --password=$PASS --host=$HOST --batch --skip-column-names -e "show databases"`
+#  DBLIST=`mysql --user=$USER --password=$PASS --host=$HOST --batch --skip-column-names -e "show databases"`
+  DBLIST=`mysql --host=$HOST --batch --skip-column-names -e "show databases"`
   # Исключение имен БД
   for DBNAME in $DBEXCLUDE; do
     DBLIST=`echo "$DBLIST" | sed "/^$DBNAME\$/d"`
@@ -47,7 +48,8 @@ fi
 # Выполнение дампа
 for DBNAME in $DBLIST; do
   echo "$DBNAME"
-  /usr/bin/mysqldump --routines --triggers --opt --user=$USER --password=$PASS --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
+#  /usr/bin/mysqldump --routines --triggers --opt --user=$USER --password=$PASS --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
+  /usr/bin/mysqldump --routines --triggers --opt --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
   bzip2 -f $BACKUPDIR/$DBNAME.$NOWDATE.sql
 done
 ############################################################
