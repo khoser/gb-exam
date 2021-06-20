@@ -8,7 +8,7 @@ nginx_upstreams: []
   - name: myapp01
     servers: {
     {% for host in groups['app'] %}
-      {{ hostvars[host]['ansible_default_ipv4']['adress'] }} {% if hostvars[host]['slave'] | default(false) | bool %}backup{% endif %}
+      {{ hostvars[host]['ansible_default_ipv4']['address'] }} {% if hostvars[host]['slave'] | default(false) | bool %}backup{% endif %}
 
     {% endfor %}
     }

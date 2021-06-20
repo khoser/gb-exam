@@ -9,8 +9,10 @@
   when: nginx_user is not defined
 
 # Setup/install tasks.
-- include_tasks: setup-Ubuntu.yml
-  when: ansible_distribution == 'Ubuntu'
+- name: Ensure nginx will reinstall if the PPA was just added.
+  apt:
+    name: nginx
+    state: absent
 
 # Vhost configuration.
 - import_tasks: vhosts.yml

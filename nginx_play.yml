@@ -1,4 +1,3 @@
-  GNU nano 4.8                                                                                      app.yml                                                                                                
 ---
 - hosts: app
   gather_facts: yes
@@ -6,9 +5,9 @@
     - role: nginx_role
       tags: [nginx]
 
-- hosts: app
-  gather_facts: yes
-  roles:
-    - role: php_role
-      tags: [php]
+#- hosts: app
+#  gather_facts: yes
+#  roles:
+#    - role: php_role
+#      tags: [php]
 
