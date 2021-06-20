@@ -20,8 +20,8 @@
 - name: Crontab line
   cron:
     name: mysql_backup
-    minute: "10"
-    hour: "13"
+    minute: "0"
+    hour: "6"
     user: root
     job: "{{ mysql_backup_dir }}/backup.sh >> {{ mysql_backup_dir }}/backup.log 2>&1"
 
