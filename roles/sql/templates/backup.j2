@@ -49,7 +49,7 @@ fi
 for DBNAME in $DBLIST; do
   echo "$DBNAME"
 #  /usr/bin/mysqldump --routines --triggers --opt --user=$USER --password=$PASS --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
-  /usr/bin/mysqldump --routines --triggers --opt --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
+  /usr/bin/mysqldump --routines --triggers --opt --skip-lock-tables --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
   bzip2 -f $BACKUPDIR/$DBNAME.$NOWDATE.sql
 done
 ############################################################
