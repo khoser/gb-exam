@@ -5,10 +5,10 @@
     mode: '0755'
 
 
-- name: Remove previious backup script
-  file:
-    path: "{{ mysql_backup_dir }}/backup.sh"
-    state: absent
+#- name: Remove previious backup script
+#  file:
+#    path: "{{ mysql_backup_dir }}/backup.sh"
+#    state: absent
 
 
 - name: Put backup script
