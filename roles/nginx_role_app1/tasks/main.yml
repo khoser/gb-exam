@@ -42,6 +42,21 @@
   notify:
     - reload nginx
 
+- name: add /var/www/vektorooo.ru
+  file:
+    path=/var/www/vektorooo.ru
+    state=directory
+
+- name: add index.html with Under construction
+  command: touch /var/www/vektorooo.ru/index.html
+  args:
+    creates: /var/www/vektorooo.ru/index.html
+
+- name: content index.html
+  copy:
+    content: "Under construction"
+    dest: "/var/www/vektorooo.ru/index.html"
+
 - name: Ensure nginx service is running as configured.
   service:
     name: nginx

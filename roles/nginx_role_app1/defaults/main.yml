@@ -63,15 +63,15 @@ nginx_listen_ipv6: false
 
 nginx_vhosts:
 # Example vhost below, showing all available options:
- - listen: "80" # default: "80"
-   server_name: "vektorooo.ru" # default: N/A
-   root: "/var/www/vektorooo.ru" # default: N/A
-   index: "index.html index.htm" # default: "index.html index.htm"
+ - listen: "80"
+   server_name: "vektorooo.ru"
+   root: "/var/www/vektorooo.ru/"
+   index: "index.html index.htm" 
 #   filename: "vektorooo.ru.conf" # Can be used to set the vhost filename.
 #
 #   # Properties that are only added if defined:
-#   server_name_redirect: "www.example.com" # default: N/A
-#   error_page: "500, 501, 502, 503, 504, 505, 507, 510"
+#   server_name_redirect: "www.vektorooo.ru vektorooo.ru"
+   error_page: "404 /404.html"
 #   access_log: ""
 #   error_log: ""
 #   extra_parameters: "" # Can be used to add extra config blocks (multiline).
@@ -87,6 +87,7 @@ nginx_upstreams:
      "10.0.0.5 backup",
 #     "srv3.example.com"
    }
+
 
 nginx_log_format: |-
   '$remote_addr - $remote_user [$time_local] "$request" '
