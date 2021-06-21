@@ -76,10 +76,39 @@ prometheus_scrape_configs:
       - targets:
 # Дефолтное значение - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9090"
           - "{{ ansible_host | default('localhost') }}:9090"
-  - job_name: "node"
-    file_sd_configs:
-      - files:
-          - "{{ prometheus_config_dir }}/file_sd/node.yml"
+#  - job_name: "node"
+#    file_sd_configs:
+#      - files:
+#          - "{{ prometheus_config_dir }}/file_sd/node.yml"
+  - job_name: 'app1'
+    static_configs:
+    - targets:
+      - "{{ hostvars[groups['app'][0]]['ansible_host'] }}:9100"
+
+  - job_name: 'app2'
+    static_configs:
+    - targets:
+      - "{{ hostvars[groups['app'][1]]['ansible_host'] }}:9100"
+
+  - job_name: 'sql1'
+    static_configs:
+    - targets:
+      - "{{ hostvars[groups['sql'][0]]['ansible_host'] }}:9100"
+
+  - job_name: 'sql2'
+    static_configs:
+    - targets:
+      - "{{ hostvars[groups['sql'][1]]['ansible_host'] }}:9100"
+
+  - job_name: 'sql3'
+    static_configs:
+    - targets:
+      - "{{ hostvars[groups['sql'][2]]['ansible_host'] }}:9100"
+
+  - job_name: 'mon'
+    static_configs:
+    - targets:
+      - "{{ hostvars[groups['mon'][0]]['ansible_host'] }}:9100"
 
 # Alternative config file name, searched in ansible templates path.
 prometheus_config_file: 'prometheus.yml.j2'
