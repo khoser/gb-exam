@@ -1,8 +1,14 @@
 ---
-- hosts: app
+- hosts: Ubuntu_Basic-1-2_30GB-app-1
   gather_facts: yes
   roles:
-    - role: nginx_role
+    - role: nginx_role_app1
+      tags: [nginx]
+
+- hosts: Ubuntu_Basic-1-2_30GB-app-2
+  gather_facts: yes
+  roles:
+    - role: nginx_role_app2
       tags: [nginx]
 
 #- hosts: app
