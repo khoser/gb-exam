@@ -11,3 +11,4 @@
 - hosts: Ubuntu_Basic-1-2_30GB-app-2
   roles:
     - geerlingguy.nginx2
+
