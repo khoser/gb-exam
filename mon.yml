@@ -27,3 +27,12 @@
   roles:
     - role: node-exporter
       tags: [node-exporter]
+
+- hosts: mon
+  roles:
+    - role: grafana
+      vars:
+        grafana_security:
+          admin_user: admin
+          admin_password: vektoroo2021
+      tags: [grafana]
