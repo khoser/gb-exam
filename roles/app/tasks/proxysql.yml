@@ -24,6 +24,7 @@
     pkg:
       - proxysql
     update_cache: yes
+  register: proxysql_install
 
 
 #- name: Copy proxysql.cfg
@@ -64,6 +65,7 @@
     - "{{ hostvars[groups['sql'][0]]['ansible_default_ipv4']['address'] }}"
     - "{{ hostvars[groups['sql'][1]]['ansible_default_ipv4']['address'] }}"
     - "{{ hostvars[groups['sql'][2]]['ansible_default_ipv4']['address'] }}"
+  when: proxysql_install is changed
 
 
 - name: proxysql_mysql_users

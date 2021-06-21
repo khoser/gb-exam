@@ -1,0 +1,8 @@
+---
+- hosts: app
+
+  roles:
+    - geerlingguy.nginx 
+    - geerlingguy.php
+    - wordpress
+
