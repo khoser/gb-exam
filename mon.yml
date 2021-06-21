@@ -1,37 +1,50 @@
 ---
+- hosts: mon
+  roles:
+    - role: prometheus
+      vars:
+        prometheus:
+          node:
+           - targets: "{{ hostvars[groups['mon'][0]]['ansible_host'] }}:9100"
+             labels:
+               host: mon
+           - targets: "{{ hostvars[groups['app'][0]]['ansible_host'] }}:9100"
+             labels:
+               host: app1
+           - targets: "{{ hostvars[groups['app'][1]]['ansible_host'] }}:9100"
+             labels:
+               host: app2
+           - targets: "{{ hostvars[groups['sql'][0]]['ansible_host'] }}:9100"
+             labels:
+               host: sql1
+           - targets: "{{ hostvars[groups['sql'][1]]['ansible_host'] }}:9100"
+             labels:
+               host: sql2
+           - targets: "{{ hostvars[groups['sql'][2]]['ansible_host'] }}:9100"
+             labels:
+               host: sql3
+           - targets: "{{ hostvars[groups['mon'][0]]['ansible_host'] }}:9100"
+             labels:
+               job: mon                
+
+        prometheus_scrape_configs:
+          - job_name: "TargetsHosts"
+            metrics_path: "{{ prometheus_metrics_path }}"
+            static_configs:
+              - targets:
+                - "{{ hostvars[groups['app'][0]]['ansible_host'] | default('localhost') }}:9100"
+                - "{{ hostvars[groups['app'][1]]['ansible_host'] | default('localhost') }}:9100"
+                - "{{ hostvars[groups['mon'][0]]['ansible_host'] | default('localhost') }}:9100"
+                - "{{ hostvars[groups['sql'][0]]['ansible_host'] | default('localhost') }}:9100"
+                - "{{ hostvars[groups['sql'][1]]['ansible_host'] | default('localhost') }}:9100"
+                - "{{ hostvars[groups['sql'][2]]['ansible_host'] | default('localhost') }}:9100"
+
 - hosts: all
   become: yes
   roles:
   - node-exporter
   tags:
   - node_exporter
-
-- hosts: mon
-  roles:
-  - prometheus
-  vars:
-    prometheus:
-      node:
-      - targets:
-        - mon:9100
-#        - demo.cloudalchemy.org:9100
-        labels:
-          env: vektorooo
-      prometheus_scrape_jobs:
-      - job_name: 'blackbox'
-        metrics_path: /probe
-        params:
-          module: [http_2xx]
-        static_configs:
-          - targets:
-            - http://mon:9100
-        relabel_configs:
-          - source_labels: [__address__]
-            target_label: __param_target
-          - source_labels: [__param_target]
-            target_label: instance
-          - target_label: __address__
-            replacement: 127.0.0.1:9115  # Blackbox exporter.
 
 - hosts: mon
   roles:
@@ -57,6 +70,6 @@
           - dashboard_id: '1860'
             revision_id: '8'
             datasource: 'Prometheus'
-          - dashboard_id: '3662'
-            revision_id: '2'
-            datasource: 'Prometheus'
+#          - dashboard_id: '3662'
+#            revision_id: '2'
+#            datasource: 'Prometheus'
