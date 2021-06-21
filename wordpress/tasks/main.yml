@@ -1,15 +1,28 @@
 ---
 # tasks file for wordpress
 
+- name: Create a new database with name 'bobdata'
+  mysql_db:
+    name: wordpress
+    state: present
+    login_user: root1
+    login_port: 6033
+    login_password: '{{ mysql_root_password }}'
+    login_host: "{{ ansible_facts['default_ipv4']['address'] }}"
+  when: inventory_hostname == groups['app'][0]
+
+
 # WordPress Configuration
 - name: create /var/www/{{ server_name }} directory for unarchiving
   file:
     path: /var/www/{{ server_name }}
     state: directory
 
-- name: php7.4-fpm
-  apt:
-    pkg: php7.4-fpm
+
+#- name: php7.4-fpm
+#  apt:
+#    pkg: php7.4-fpm
+
 
 - name: Download and unpack latest WordPress
   unarchive:
