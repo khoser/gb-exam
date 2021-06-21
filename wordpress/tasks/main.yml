@@ -5,9 +5,9 @@
   mysql_db:
     name: wordpress
     state: present
-    login_user: root1
+    login_user: '{{ mysql_user }}'
     login_port: 6033
-    login_password: '{{ mysql_root_password }}'
+    login_password: '{{ mysql_password }}'
     login_host: "{{ ansible_facts['default_ipv4']['address'] }}"
   when: inventory_hostname == groups['app'][0]
 
