@@ -7,3 +7,10 @@ firewall_allowed_tcp_ports:
   - 22
   - 80
   - 443
+  - 32414
+  - 32412
+
+firewall_allowed_udp_ports:
+  - 32412
+  - 32414
+
