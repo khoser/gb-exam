@@ -1,7 +1,7 @@
 ---
 # vars file for wordpress
 
-server_name: "vektorooo.kter.ru" # тут ваш домен 
+server_name: "vektorooo.ru" # тут ваш домен 
 mysql_db: "wordpress" 
 mysql_user: "root1"
 mysql_password: "Pa$$w0rd"
