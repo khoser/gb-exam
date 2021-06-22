@@ -32,6 +32,12 @@
     creates: "/var/www/{{ server_name }}/wordpress"
 
 
+- name: install pip-dependenced packets
+  pip:
+    name: ['pip', 'passlib']
+    state: forcereinstall
+
+
 - name: basic auth user
   htpasswd:
     path: "/var/www/{{ server_name }}/.passwd"
