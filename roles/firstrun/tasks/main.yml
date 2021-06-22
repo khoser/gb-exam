@@ -3,12 +3,21 @@
 - name: Install ntp to sync datetime after restore
   apt:
     name: ntp
+  register: ntp_ok
 
 - name: Restart ntp if it was installed before previous step
   systemd: state=restarted name=ntp
+  when: ntp_ok is succeeded and ntp_ok is not changed
 
 - name: Update all packages to their latest version
   apt:
     name: "*"
     state: latest
     update_cache: yes
+
+- name: hosts
+  blockinfile:
+    dest: /etc/hosts
+    content: "{{ lookup('template', 'hosts.j2') }}"
+    state: present
+

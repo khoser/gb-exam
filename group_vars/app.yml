@@ -14,6 +14,3 @@ firewall_allowed_tcp_ports:
 firewall_allowed_udp_ports:
   - 32412
   - 32414
-
-
-
