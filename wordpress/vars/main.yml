@@ -30,6 +30,8 @@ nginx_vhosts:
           fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
           include fastcgi_params;
       }
+      auth_basic           “Administrator’s Area”;
+      auth_basic_user_file  "/var/www/{{ server_name }}/.passwd"; 
 #      ssl_certificate     /etc/letsencrypt/live/{{ server_name }}/fullchain.pem;
 #      ssl_certificate_key /etc/letsencrypt/live/{{ server_name }}/privkey.pem;
 #      ssl_protocols       TLSv1.1 TLSv1.2;
@@ -39,7 +41,7 @@ php_memory_limit: "128M"
 php_max_execution_time: "90"
 php_upload_max_filesize: "256M"
 php_webserver_daemon: "nginx"
-php_enable_php_fpm: true
+#php_enable_php_fpm: true
 php_packages:
   - php
   - php-cli

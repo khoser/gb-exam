@@ -19,9 +19,9 @@
     state: directory
 
 
-#- name: php7.4-fpm
-#  apt:
-#    pkg: php7.4-fpm
+- name: php7.4-fpm
+  apt:
+    pkg: php7.4-fpm
 
 
 - name: Download and unpack latest WordPress
@@ -30,6 +30,14 @@
     dest: "/var/www/{{ server_name }}"
     remote_src: yes
     creates: "/var/www/{{ server_name }}/wordpress"
+
+
+- name: basic auth user
+  htpasswd:
+    path: "/var/www/{{ server_name }}/.passwd"
+    name: user
+    password: user
+
 
 - name: Set ownership
   file:
