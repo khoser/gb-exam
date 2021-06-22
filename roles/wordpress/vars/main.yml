@@ -71,3 +71,10 @@ mysql_users:
     password: "{{ mysql_password }}"
     priv: "wordpress.*:ALL"
 
+#nginx_upstreams:
+# - name: myapp1
+#   servers: {
+#     "10.0.0.17",
+#     "10.0.0.5 backup",
+#   }
+

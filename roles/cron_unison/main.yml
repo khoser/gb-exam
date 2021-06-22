@@ -1,0 +1,17 @@
+---
+- name: add /usr/local/bin/unisonsync
+  command: touch /usr/local/bin/unisonsync
+  args:
+    creates: /usr/local/bin/unisonsync
+
+- name: content unisonsync
+  copy:
+    content: "unison /home/ubuntu/test_sync ssh://10.0.0.5///home/ubuntu/test_sync"
+    dest: "/usr/local/bin/unisonsync"
+
+- name: add unison in crontab
+  cron:
+    name: "unisonsync"
+    minute: "5"
+    hour: "0"
+    job: "/usr/local/bin/unisonsync"

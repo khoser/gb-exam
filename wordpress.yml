@@ -1,8 +1,14 @@
 ---
 - hosts: app
-
   roles:
-    - geerlingguy.nginx 
     - geerlingguy.php
     - wordpress
+
+- hosts: Ubuntu_Basic-1-2_30GB-app-1
+  roles:
+    - geerlingguy.nginx1
+
+- hosts: Ubuntu_Basic-1-2_30GB-app-2
+  roles:
+    - geerlingguy.nginx2
 
