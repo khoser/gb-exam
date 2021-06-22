@@ -5,4 +5,10 @@ server {
   location / {
     proxy_pass http://{{ ansible_host | default('localhost') }}:9090/;
   }
+
+  auth_basic           "Administrator’s Area";
+  auth_basic_user_file  "/var/www/{{ prometheus_domain }}/.passwd";
+
+  proxy_set_header X-WEBAUTH-USER $remote_user;
+  proxy_set_header Authorization "";
 }

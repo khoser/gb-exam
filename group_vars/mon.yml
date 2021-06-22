@@ -15,4 +15,9 @@ firewall_allowed_tcp_ports:
 grafana_domain: grafana.vektorooo.ru
 prometheus_domain: prometheus.vektorooo.ru
 
+prometheus_base_user    : user
+prometheus_base_password: user
+
+grafana_base_user       : user
+grafana_base_password   : user
   

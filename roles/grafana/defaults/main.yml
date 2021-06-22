@@ -225,9 +225,9 @@ grafana_datasources:
     type: "prometheus"
     access: "proxy"
     url: "http://prometheus.vektorooo.ru"
-    basicAuth: false
-    basicAuthUser: "admin"
-    basicAuthPassword: "password"
+    basicAuth: true
+    basicAuthUser: "{{ prometheus_base_user }}"
+    basicAuthPassword: "{{ prometheus_base_password  }}"
     isDefault: true
     jsonData:
       tlsAuth: false
