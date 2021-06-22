@@ -30,7 +30,7 @@ nginx_vhosts:
           fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
           include fastcgi_params;
       }
-      auth_basic           “Administrator’s Area”;
+      auth_basic           "Administrator’s Area";
       auth_basic_user_file  "/var/www/{{ server_name }}/.passwd"; 
 #      ssl_certificate     /etc/letsencrypt/live/{{ server_name }}/fullchain.pem;
 #      ssl_certificate_key /etc/letsencrypt/live/{{ server_name }}/privkey.pem;
