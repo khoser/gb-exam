@@ -7,3 +7,13 @@ firewall_allowed_tcp_ports:
   - 22
   - 80
   - 443
+  - 9100 # Node-exporter
+  - 32412
+  - 32414
+
+firewall_allowed_udp_ports:
+  - 32412
+  - 32414
+
+
+

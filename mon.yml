@@ -11,3 +11,28 @@
     - group_vars/mon.yml #В этом файле список портов, которые нужно открыть
   roles:
     - role: firewall
+      tags: [firewall]
+
+- hosts: mon
+  roles:
+    - role: prometheus
+      tags: [prometheus]
+
+- hosts: mon
+  roles:
+    - role: mon-nginx
+      tags: [mon-nginx]
+
+- hosts: mon
+  roles:
+    - role: node-exporter
+      tags: [node-exporter]
+
+- hosts: mon
+  roles:
+    - role: grafana
+      vars:
+        grafana_security:
+          admin_user: admin
+          admin_password: vektorooo2021
+      tags: [grafana]
