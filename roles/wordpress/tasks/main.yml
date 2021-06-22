@@ -31,6 +31,12 @@
     remote_src: yes
     creates: "/var/www/{{ server_name }}/wordpress"
 
+- name: install Mysql-server 8.0 and Galera Cluster packages
+  apt:
+    pkg:
+      - python3-pip
+    update_cache: yes
+
 
 - name: install pip-dependenced packets
   pip:
