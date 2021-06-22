@@ -22,3 +22,15 @@
   with_file:
     - public_ssh_keys/removeuser.pub
   when: remove_user_flag
+
+# Basic auth
+  - name: create /var/www/{{ grafana_domain }} directory for unarchiving
+  file:
+    path: /var/www/{{ grafana_domain }}
+    state: directory
+
+  - name: basic auth user
+    htpasswd:
+      path: "/var/www/{{ grafana_domain }}/.passwd"
+      name: user
+      password: user
