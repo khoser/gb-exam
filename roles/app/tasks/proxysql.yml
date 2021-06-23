@@ -155,7 +155,7 @@
 
 - name: Configure proxysql service
   copy:
-    path: /etc/systemd/system/proxysql_exporter.service
+    dest: /etc/systemd/system/proxysql_exporter.service
     content: |
       [Unit]
       Description=Proxysql exporter
