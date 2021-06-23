@@ -29,6 +29,7 @@
       tags: [node-exporter]
 
 - hosts: mon
+  become: yes
   roles:
     - role: influxdb
       tags: [influxdb]

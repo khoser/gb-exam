@@ -7,21 +7,21 @@
 #    update_cache: true
 #    cache_valid_time: 3600
 
-- name: Add InfluxDB APT signing key
-  apt_key:
-    state: present
-    url: https://repos.influxdata.com/influxdb.key
-  become: true
+#- name: Add InfluxDB APT signing key
+#  apt_key:
+#    state: present
+#    url: https://repos.influxdata.com/influxdb.key
+#    file: /etc/apt/trusted.gpg.d/influxdb.gpg
+#  become: true
 
-- name: Add InfluxDB APT repository
-  apt_repository:
-    repo: "deb [arch=amd64] https://repos.influxdata.com/{{ ansible_distribution|lower() }} {{ ansible_distribution_release }} stable"
-    state: present
-    update_cache: yes
+#- name: Add InfluxDB APT repository
+#  apt_repository:
+#    repo: "deb [signed-by=/etc/apt/trusted.gpg.d/influxdb.gpg] https://repos.influxdata.com/{{ ansible_distribution|lower() }} {{ ansible_distribution_release }} stable"
+#    state: present
+#    update_cache: yes
 
 - name: install InfluxDB
   apt:
-    pkg:
-      - influxdb
+    name: influxdb
+    state: present
     update_cache: yes
-  register: influxdb_install
