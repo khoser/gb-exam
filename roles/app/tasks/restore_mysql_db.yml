@@ -1,0 +1,18 @@
+---
+# By default is not to be included to roles and/or playbooks
+
+- name: Copy database dump file
+  copy:
+    src: /var/backup/wordpress.sql.bz2
+    dest: /tmp
+
+
+- name: Restore db
+  mysql_db:
+    name: wordpress
+    state: import
+    target: /tmp/wordpress.sql.bz2
+    login_host: "{{ hostvars[groups['app'][0]]['ansible_default_ipv4']['address']  }}"
+    login_password: '{{ mysql_root_password }}'
+    login_port: 6033
+    login_user: root1

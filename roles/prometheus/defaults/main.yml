@@ -80,35 +80,30 @@ prometheus_scrape_configs:
 #    file_sd_configs:
 #      - files:
 #          - "{{ prometheus_config_dir }}/file_sd/node.yml"
-  - job_name: 'app1'
+  - job_name: 'Node-exporter'
     static_configs:
     - targets:
-      - "{{ hostvars[groups['app'][0]]['ansible_host'] }}:9100"
+      - "{{ groups['app'][0] }}:9100"
+      - "{{ groups['app'][1] }}:9100"
+      - "{{ groups['sql'][0] }}:9100"
+      - "{{ groups['sql'][1] }}:9100"
+      - "{{ groups['sql'][2] }}:9100"
+      - "{{ groups['mon'][0] }}:9100"
 
-  - job_name: 'app2'
+  - job_name: 'Proxysql-exporter'
     static_configs:
-    - targets:
-      - "{{ hostvars[groups['app'][1]]['ansible_host'] }}:9100"
+      - targets:
+          - "{{ groups['app'][0] }}:42004"
+          - "{{ groups['app'][1] }}:42004"
+    # with_items: "{{ groups['app'] } }"  - так не работает :(
 
-  - job_name: 'sql1'
+  - job_name: 'Mysqld-exporter'
     static_configs:
-    - targets:
-      - "{{ hostvars[groups['sql'][0]]['ansible_host'] }}:9100"
-
-  - job_name: 'sql2'
-    static_configs:
-    - targets:
-      - "{{ hostvars[groups['sql'][1]]['ansible_host'] }}:9100"
-
-  - job_name: 'sql3'
-    static_configs:
-    - targets:
-      - "{{ hostvars[groups['sql'][2]]['ansible_host'] }}:9100"
-
-  - job_name: 'mon'
-    static_configs:
-    - targets:
-      - "{{ hostvars[groups['mon'][0]]['ansible_host'] }}:9100"
+      - targets:
+          - "{{ groups['sql'][0] }}:9111"
+          - "{{ groups['sql'][1] }}:9111"
+          - "{{ groups['sql'][2] }}:9111"
+    # with_items: "{ { groups['sql'] }}"  - так не работает :(
 
 # Alternative config file name, searched in ansible templates path.
 prometheus_config_file: 'prometheus.yml.j2'

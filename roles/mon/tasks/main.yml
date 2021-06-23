@@ -5,6 +5,7 @@
       - htop
       - python3-jmespath
       - python3-passlib
+      - curl
 
 - name: Add users into authorized keys
   authorized_key:
