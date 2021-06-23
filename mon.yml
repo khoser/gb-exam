@@ -29,6 +29,17 @@
       tags: [node-exporter]
 
 - hosts: mon
+  become: yes
+  roles:
+    - role: influxdb
+      tags: [influxdb]
+    
+- hosts: all
+  roles:
+    - role: telegraf
+      tags: [telegraf]
+
+- hosts: mon
   roles:
     - role: grafana
       vars:
