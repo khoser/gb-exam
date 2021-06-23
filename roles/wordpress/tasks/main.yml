@@ -91,6 +91,6 @@
 
 - name: Under construction at default location
   copy:
-    path: /var/www/html/index.html
+    dest: /var/www/html/index.html
     content: 'Under construction'
 
