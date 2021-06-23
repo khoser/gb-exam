@@ -1,4 +1,4 @@
-# dj-wasabi.telegraf
+# dj-wasabi.telegraf  
 
 - [dj-wasabi.telegraf](#dj-wasabitelegraf)
   * [Build status:](#build-status-)
