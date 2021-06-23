@@ -19,9 +19,9 @@
     state: directory
 
 
-#- name: php7.4-fpm
-#  apt:
-#    pkg: php7.4-fpm
+- name: php7.4-fpm
+  apt:
+    pkg: php7.4-fpm
 
 
 - name: Download and unpack latest WordPress
@@ -30,6 +30,26 @@
     dest: "/var/www/{{ server_name }}"
     remote_src: yes
     creates: "/var/www/{{ server_name }}/wordpress"
+
+- name: python3-pip
+  apt:
+    pkg:
+      - python3-pip
+    update_cache: yes
+
+
+- name: install pip-dependenced packets
+  pip:
+    name: ['pip', 'passlib']
+    state: forcereinstall
+
+
+- name: basic auth user
+  htpasswd:
+    path: "/var/www/{{ server_name }}/.passwd"
+    name: user
+    password: user
+
 
 - name: Set ownership
   file:
@@ -50,4 +70,9 @@
   template:
     src: "wp-config.php.j2"
     dest: "/var/www/{{ server_name }}/wordpress/wp-config.php"
+
+- name: Under construction at default location
+  copy:
+    path: /var/www/html/index.html
+    content: 'Under construction'
 

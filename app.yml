@@ -17,3 +17,10 @@
   roles:
     - role: node-exporter
       tags: [node-exporter]
+
+- hosts: app
+  gather_facts: yes
+  roles:
+    - role: wordpress
+      tags: [wordpress]
+
