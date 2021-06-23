@@ -56,7 +56,7 @@
     login_password: 'admin'
     login_host: '127.0.0.1'
     login_port: 6032
-    hostname: "{{ hostvars[item]['ansible_default_ipv4']['address']  }}"
+    hostname: "{{ item }}"
     hostgroup_id: 0
     state: present
     load_to_runtime: yes
