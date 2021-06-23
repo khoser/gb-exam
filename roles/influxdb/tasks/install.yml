@@ -1,8 +1,26 @@
 ---
 
-- name: install > Packages
+#- name: install > Packages
+#  apt:
+#    name: "{{ manala_influxdb_install_packages|default(manala_influxdb_install_packages_default, True) }}"
+#    install_recommends: false
+#    update_cache: true
+#    cache_valid_time: 3600
+
+- name: Add InfluxDB APT signing key
+  apt_key:
+    state: present
+    url: https://repos.influxdata.com/influxdb.key
+  become: true
+
+- name: Add InfluxDB APT repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://repos.influxdata.com/{{ ansible_distribution|lower() }} {{ ansible_distribution_release }} stable"
+    state: present
+
+- name: install InfluxDB
   apt:
-    name: "{{ manala_influxdb_install_packages|default(manala_influxdb_install_packages_default, True) }}"
-    install_recommends: false
-    update_cache: true
-    cache_valid_time: 3600
+    pkg:
+      - influxdb
+    update_cache: yes
+  register: influxdb_install
