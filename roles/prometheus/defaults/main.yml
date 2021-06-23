@@ -84,46 +84,48 @@ prometheus_scrape_configs:
     static_configs:
     - targets:
       - "{{ groups['app'][0] }}:9100"
+        tags: 'blackbox'
+      - "{{ groups['app'][0] }}:42004"
+        tags: 'proxysql'
 
   - job_name: 'app2'
     static_configs:
     - targets:
       - "{{ groups['app'][1] }}:9100"
+        tags: 'blackbox'
+      - "{{ groups['app'][1] }}:42004"
+        tags: 'proxysql'
 
   - job_name: 'sql1'
     static_configs:
     - targets:
       - "{{ groups['sql'][0] }}:9100"
+        tags: 'blackbox'
+      - "{{ groups['sql'][0] }}:9111"
+        tags: 'mysql'
 
   - job_name: 'sql2'
     static_configs:
     - targets:
       - "{{ groups['sql'][1] }}:9100"
+        tags: 'blackbox'
+      - "{{ groups['sql'][1] }}:9111"
+        tags: 'mysql'
 
   - job_name: 'sql3'
     static_configs:
     - targets:
       - "{{ groups['sql'][2] }}:9100"
+        tags: 'blackbox'
+      - "{{ groups['sql'][2] }}:9111"
+        tags: 'mysql'
 
   - job_name: 'mon'
     static_configs:
     - targets:
       - "{{ groups['mon'][0] }}:9100"
+        tags: 'blackbox'
 
-  - job_name: 'proxysql'
-    static_configs:
-      - targets:
-          - "{{ groups['app'][0] }}:42004"
-          - "{{ groups['app'][1] }}:42004"
-    # with_items: "{{ groups['app'] } }"  - так не работает :(
-
-  - job_name: 'mysqld'
-    static_configs:
-      - targets:
-          - "{{ groups['sql'][0] }}:9111"
-          - "{{ groups['sql'][1] }}:9111"
-          - "{{ groups['sql'][2] }}:9111"
-    # with_items: "{ { groups['sql'] }}"  - так не работает :(
 
 # Alternative config file name, searched in ansible templates path.
 prometheus_config_file: 'prometheus.yml.j2'
