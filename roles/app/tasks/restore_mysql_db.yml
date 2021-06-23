@@ -12,7 +12,7 @@
     name: wordpress
     state: import
     target: /tmp/wordpress.sql.bz2
-    login_host: 127.0.0.1
+    login_host: "{{ hostvars[groups['app'][0]]['ansible_default_ipv4']['address']  }}"
     login_password: '{{ mysql_root_password }}'
     login_port: 6033
     login_user: root1
