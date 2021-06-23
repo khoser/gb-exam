@@ -29,6 +29,11 @@
       tags: [node-exporter]
 
 - hosts: mon
+  role:
+    - role: influxdb
+    tags: [influxdb]
+
+- hosts: mon
   roles:
     - role: grafana
       vars:
