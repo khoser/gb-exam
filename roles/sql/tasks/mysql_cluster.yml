@@ -274,6 +274,6 @@
 
 - name: Enable mysqld_exporter
   systemd:
-    name: mysql_exporter
+    name: mysqld_exporter
     enabled: yes
     state: restarted
