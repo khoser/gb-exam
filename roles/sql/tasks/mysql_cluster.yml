@@ -236,12 +236,19 @@
 
 
 # install mysql exporter
-- name: Download and unpack mysql v1.1.0
+- name: Download and unpack mysql v0.13.0
   unarchive:
     src: https://github.com/prometheus/mysqld_exporter/releases/download/v0.13.0/mysqld_exporter-0.13.0.linux-amd64.tar.gz
     dest: "/opt"
     remote_src: yes
-    creates: "/opt/mysql_exporter/"
+    creates: "/opt/mysqld_exporter-0.13.0.linux-amd64/"
+
+
+- name: Create a symbolic link
+  file:
+    src: "/opt/mysqld_exporter-0.13.0.linux-amd64"
+    dest: "/opt/mysqld_exporter"
+    state: link
 
 
 - name: Configure mysqld_exporter service
