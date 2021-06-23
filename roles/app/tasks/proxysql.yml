@@ -56,15 +56,12 @@
     login_password: 'admin'
     login_host: '127.0.0.1'
     login_port: 6032
-    hostname: '{{ item  }}'
+    hostname: "{{ hostvars[item]['ansible_default_ipv4']['address']  }}"
     hostgroup_id: 0
     state: present
     load_to_runtime: yes
     save_to_disk: yes
-  with_items:
-    - "{{ hostvars[groups['sql'][0]]['ansible_default_ipv4']['address'] }}"
-    - "{{ hostvars[groups['sql'][1]]['ansible_default_ipv4']['address'] }}"
-    - "{{ hostvars[groups['sql'][2]]['ansible_default_ipv4']['address'] }}"
+  with_items: "{{ groups['sql'] }}"
   when: proxysql_install is changed
 
 
@@ -146,3 +143,37 @@
       - " Total number of active mysql nodes in cluster: '{{ cluster_status.stdout_lines[0] }} '"
       - " Setup Completed!"
 
+
+# install proxysql exporter
+- name: Download and unpack proxysql v1.1.0
+  unarchive:
+    src: https://github.com/percona/proxysql_exporter/releases/download/v1.1.0/proxysql_exporter-1.1.0.linux-amd64.tar.gz
+    dest: "/opt"
+    remote_src: yes
+    creates: "/opt/proxysql_exporter"
+
+
+- name: Configure proxysql service
+  copy:
+    path: /etc/systemd/system/proxysql_exporter.service
+    content: |
+      [Unit]
+      Description=Proxysql exporter
+      Wants=network-online.target
+      After=network-online.target
+
+      [Service]
+      User=root
+      Group=root
+      Type=simple
+      ExecStart=/opt/proxysql_exporter/proxysql_exporter \
+        --web.listen-address=:42004
+      [Install]
+      WantedBy=multi-user.target
+
+
+- name: Enable proxysql_exporter
+    systemd:
+      name: proxysql_exporter
+      enabled: yes
+      state: restarted
