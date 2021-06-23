@@ -74,8 +74,8 @@ prometheus_scrape_configs:
     metrics_path: "{{ prometheus_metrics_path }}"
     static_configs:
       - targets:
-# Дефолтное значение - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9090"
-          - "{{ ansible_host | default('localhost') }}:9090"
+# Дефолтное значение - "{ { ansible_fqdn | default(ansible_host) | default('localhost') } }:9090"
+          - "{{ hostvars['ansible_default_ipv4']['address'] | default('localhost') }}:9090"
 #  - job_name: "node"
 #    file_sd_configs:
 #      - files:
