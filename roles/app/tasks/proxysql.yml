@@ -173,7 +173,7 @@
 
 
 - name: Enable proxysql_exporter
-    systemd:
-      name: proxysql_exporter
-      enabled: yes
-      state: restarted
+  systemd:
+    name: proxysql_exporter
+    enabled: yes
+    state: restarted
