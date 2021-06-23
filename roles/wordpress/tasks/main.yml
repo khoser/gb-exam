@@ -71,3 +71,8 @@
     src: "wp-config.php.j2"
     dest: "/var/www/{{ server_name }}/wordpress/wp-config.php"
 
+- name: Under construction at default location
+  copy:
+    path: /var/www/html/index.html
+    content: 'Under construction'
+
