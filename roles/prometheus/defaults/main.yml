@@ -110,17 +110,17 @@ prometheus_scrape_configs:
     - targets:
       - "{{ hostvars[groups['mon'][0]]['ansible_default_ipv4']['address'] }}:9100"
 
-  - job_name: 'proxysql{{ item }}'
-      static_configs:
-        - targets:
-            - "{{ hostvars[item]['ansible_default_ipv4']['address'] }}:42004"
-      with_items: "{{ groups['app'] }}"
+  - job_name: 'proxysql {{ item }}'
+    static_configs:
+      - targets:
+          - "{{ hostvars[item]['ansible_default_ipv4']['address'] }}:42004"
+    with_items: "{{ groups['app'] }}"
 
-  - job_name: 'mysqld{{ item }}'
-      static_configs:
-        - targets:
-            - "{{ hostvars[item]['ansible_default_ipv4']['address'] }}:9111"
-      with_items: "{{ groups['sql'] }}"
+  - job_name: 'mysqld {{ item }}'
+    static_configs:
+      - targets:
+          - "{{ hostvars[item]['ansible_default_ipv4']['address'] }}:9111"
+    with_items: "{{ groups['sql'] }}"
 
 # Alternative config file name, searched in ansible templates path.
 prometheus_config_file: 'prometheus.yml.j2'
