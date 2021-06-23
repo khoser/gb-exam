@@ -27,16 +27,18 @@
     creates: "/var/www/{{ server_name }}/wordpress"
 
 
-- name: stop apache (installed with wp)
+- name: stop apache2 (installed with wp)
   systemd:
     state: stopped
     name: apache2
+  ignore_errors: yes
 
 
-- name: disable apache
+- name: disable apache2
   systemd:
     name: apache2
     enabled: no
+  ignore_errors: yes
 
 
 - name: php7.4-fpm
