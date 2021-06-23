@@ -21,6 +21,8 @@
 - hosts: app
   gather_facts: yes
   roles:
+    - role: geerlingguy.nginx
+    - role: geerlingguy.php
     - role: wordpress
       tags: [wordpress]
 
