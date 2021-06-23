@@ -12,4 +12,3 @@ firewall_allowed_tcp_ports:
   - 6032
   - 9100 # Node-exporter
   - 9111 # mysqld-exporter
-  -

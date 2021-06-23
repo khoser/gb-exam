@@ -80,7 +80,7 @@ prometheus_scrape_configs:
 #    file_sd_configs:
 #      - files:
 #          - "{{ prometheus_config_dir }}/file_sd/node.yml"
-  - job_name: 'blackbox'
+  - job_name: 'Node-exporter'
     static_configs:
     - targets:
       - "{{ groups['app'][0] }}:9100"
@@ -90,14 +90,14 @@ prometheus_scrape_configs:
       - "{{ groups['sql'][2] }}:9100"
       - "{{ groups['mon'][0] }}:9100"
 
-  - job_name: 'proxysql'
+  - job_name: 'Proxysql-exporter'
     static_configs:
       - targets:
           - "{{ groups['app'][0] }}:42004"
           - "{{ groups['app'][1] }}:42004"
     # with_items: "{{ groups['app'] } }"  - так не работает :(
 
-  - job_name: 'mysqld'
+  - job_name: 'Mysqld-exporter'
     static_configs:
       - targets:
           - "{{ groups['sql'][0] }}:9111"

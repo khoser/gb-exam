@@ -11,6 +11,7 @@ firewall_allowed_tcp_ports:
   - 9100 # Node-exporter
   - 9090 # Prometheus
   - 8086 # телеграф
+  - 9115 # blackbox
 
 # Настройки доменного имени для хоста мониторинга
 grafana_domain: grafana.vektorooo.ru
