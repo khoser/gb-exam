@@ -1,7 +1,7 @@
 ---
 # tasks file for wordpress
 
-- name: Create a new database with name 'bobdata'
+- name: Create a new database with name 'wordpress'
   mysql_db:
     name: wordpress
     state: present
@@ -19,17 +19,30 @@
     state: directory
 
 
-- name: php7.4-fpm
-  apt:
-    pkg: php7.4-fpm
-
-
 - name: Download and unpack latest WordPress
   unarchive:
     src: https://wordpress.org/latest.tar.gz
     dest: "/var/www/{{ server_name }}"
     remote_src: yes
     creates: "/var/www/{{ server_name }}/wordpress"
+
+
+- name: stop apache (installed with wp)
+  systemd:
+    state: stopped
+    name: apache2
+
+
+- name: disable apache
+  systemd:
+    name: apache2
+    enabled: no
+
+
+- name: php7.4-fpm
+  apt:
+    pkg: php7.4-fpm
+
 
 - name: python3-pip
   apt:
@@ -59,6 +72,7 @@
     owner: www-data
     group: www-data
 
+
 - name: Set permissions for directories
   shell: "/usr/bin/find /var/www/{{ server_name }}/wordpress/ -type d -exec chmod 750 {} \\;"
 
@@ -66,10 +80,12 @@
 - name: Set permissions for files
   shell: "/usr/bin/find /var/www/{{ server_name }}/wordpress/ -type f -exec chmod 640 {} \\;"
 
+
 - name: Set up wp-config
   template:
     src: "wp-config.php.j2"
     dest: "/var/www/{{ server_name }}/wordpress/wp-config.php"
+
 
 - name: Under construction at default location
   copy:
