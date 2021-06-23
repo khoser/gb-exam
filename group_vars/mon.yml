@@ -7,4 +7,17 @@ firewall_allowed_tcp_ports:
   - 22
   - 80
   - 443
+  - 3000 # Grafana
+  - 9100 # Node-exporter
+  - 9090 # Prometheus
+
+# Настройки доменного имени для хоста мониторинга
+grafana_domain: grafana.vektorooo.ru
+prometheus_domain: prometheus.vektorooo.ru
+
+prometheus_base_user    : user
+prometheus_base_password: user
+
+grafana_base_user       : user
+grafana_base_password   : user
   

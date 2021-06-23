@@ -5,6 +5,7 @@
     - group_vars/sql.yml #В этом файле список портов, которые нужно открыть
   roles:
     - role: firewall
+      tags: [firewall]
 
 
 - hosts: sql
@@ -14,3 +15,7 @@
     - role: sql
       tags: [sql]
 
+- hosts: sql
+  roles:
+    - role: node-exporter
+      tags: [node-exporter]

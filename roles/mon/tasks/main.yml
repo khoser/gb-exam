@@ -3,6 +3,8 @@
     pkg:
       - mc
       - htop
+      - python3-jmespath
+      - python3-passlib
 
 - name: Add users into authorized keys
   authorized_key:
@@ -21,3 +23,37 @@
   with_file:
     - public_ssh_keys/removeuser.pub
   when: remove_user_flag
+
+# Basic auth
+- name: create /var/www/{{ grafana_domain }} directory for unarchiving
+  file:
+    path: /var/www/{{ grafana_domain }}
+    state: directory
+
+- name: Grafana basic auth settings
+  htpasswd:
+    path: "/var/www/{{ grafana_domain }}/.passwd"
+    name: "{{ grafana_base_user }}"
+    password: "{{ grafana_base_password }}"
+
+- name: Set ownership
+  file:
+    path: "/var/www/{{ grafana_domain }}"
+    state: directory
+    recurse: yes
+    owner: www-data
+    group: www-data
+
+- name: Prometheus basic auth settings
+  htpasswd:
+    path: "/var/www/{{ prometheus_domain }}/.passwd"
+    name: "{{ prometheus_base_user }}"
+    password: "{{ prometheus_base_password }}"
+
+- name: Set ownership
+  file:
+    path: "/var/www/{{ prometheus_domain }}"
+    state: directory
+    recurse: yes
+    owner: www-data
+    group: www-data
