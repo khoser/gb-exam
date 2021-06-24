@@ -105,6 +105,13 @@ prometheus_scrape_configs:
           - "{{ groups['sql'][2] }}:9111"
     # with_items: "{ { groups['sql'] }}"  - так не работает :(
 
+
+  - job_name: 'Pushgateway'
+    static_configs:
+      - targets:
+          - "{{ groups['mon'][0] }}:9091"
+
+
 # Alternative config file name, searched in ansible templates path.
 prometheus_config_file: 'prometheus.yml.j2'
 

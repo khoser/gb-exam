@@ -2,8 +2,6 @@
   apt:
     pkg:
       - ntp
-      - mc
-      - htop
       - gnupg
       - software-properties-common
 

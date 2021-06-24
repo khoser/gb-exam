@@ -12,6 +12,7 @@ firewall_allowed_tcp_ports:
   - 9090 # Prometheus
   - 8086 # телеграф
   - 9115 # blackbox
+  - 9091 # pushgateway
 
 # Настройки доменного имени для хоста мониторинга
 grafana_domain: "grafana.{{ domain_address }}"
