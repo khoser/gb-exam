@@ -3,8 +3,6 @@
 
 server_name: "{{ domain_address }}" # тут ваш домен 
 mysql_db: "{{ wordpress_db }}"
-mysql_user: "{{ mysql_user }}"
-mysql_password: "{{ mysql_password }}"
 
 nginx_vhosts:
 #  - listen: "80"
