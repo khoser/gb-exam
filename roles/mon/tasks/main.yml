@@ -55,3 +55,48 @@
     recurse: yes
     owner: www-data
     group: www-data
+
+
+# install push gateway for prometheus
+- name: Download and unpack pushgateway v1.4.1
+  unarchive:
+    src: https://github.com/prometheus/pushgateway/releases/download/v1.4.1/pushgateway-1.4.1.linux-amd64.tar.gz
+    dest: "/opt"
+    remote_src: yes
+    creates: "/opt/pushgateway-1.4.1.linux-amd64"
+
+
+- name: Create a symbolic link
+  file:
+    src: "/opt/pushgateway-1.4.1.linux-amd64"
+    dest: "/opt/pushgateway"
+    state: link
+
+
+- name: Configure pushgateway service
+  copy:
+    dest: /etc/systemd/system/pushgateway.service
+    content: |
+      [Unit]
+      Description=mysqld exporter
+      Wants=network-online.target
+      After=network-online.target
+
+      [Service]
+      User=root
+      Group=root
+      Type=simple
+      ExecStart=/opt/pushgateway/pushgateway \
+        --web.listen-address=:9091 \
+        --persistence.file=/opt/pushgateway/pushgateway.metrics
+
+      [Install]
+      WantedBy=multi-user.target
+
+
+- name: Enable pushgateway
+  systemd:
+    name: pushgateway
+    enabled: yes
+    state: restarted
+

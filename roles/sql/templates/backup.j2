@@ -16,19 +16,21 @@ DBLIST=""
 DBEXCLUDE="information_schema"
 
 
-NOWTIME=`date '+%Y-%m-%d %H:%M'`
-NOWDATE=`date '+%Y%m%d'`
+NOWTIME=$(date '+%Y-%m-%d %H:%M')
+NOWDATE=$(date '+%Y%m%d')
 DOTNAME="\.sql\.bz2"
  
 # Сообщение по завершению выполнения
 function end_msg() {
-  echo "========== `date '+%Y-%m-%d %H:%M'` END backup-mysql =========="
+  echo "========== $(date '+%Y-%m-%d %H:%M') END backup-mysql =========="
   echo ""
 }
 
-echo "========== `date '+%Y-%m-%d %H:%M'` START backup-mysql =========="
+
+echo "========== $(date '+%Y-%m-%d %H:%M') START backup-mysql =========="
 if [ ! -d "$BACKUPDIR" ]; then
   echo "Директория не верна"
+  echo "backup_fail true" | curl --data-binary @- 'http://{{ groups[mon][0] }}:9091/metrics/job/backup/instance/{{ inventory_hostname }}'
   end_msg
   exit 0
 fi
@@ -37,10 +39,10 @@ if [ -z "$DBLIST" ]; then
   ################## Архивация всех БД ######################
   # Получение массива имен БД
 #  DBLIST=`mysql --user=$USER --password=$PASS --host=$HOST --batch --skip-column-names -e "show databases"`
-  DBLIST=`mysql --host=$HOST --batch --skip-column-names -e "show databases"`
+  DBLIST=$(mysql --host=$HOST --batch --skip-column-names -e "show databases")
   # Исключение имен БД
   for DBNAME in $DBEXCLUDE; do
-    DBLIST=`echo "$DBLIST" | sed "/^$DBNAME\$/d"`
+    DBLIST=$(echo "$DBLIST" | sed "/^$DBNAME\$/d")
   done
 
 fi
@@ -51,21 +53,22 @@ for DBNAME in $DBLIST; do
 #  /usr/bin/mysqldump --routines --triggers --opt --user=$USER --password=$PASS --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
   /usr/bin/mysqldump --routines --triggers --opt --skip-lock-tables --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
   bzip2 -f $BACKUPDIR/$DBNAME.$NOWDATE.sql
+  echo "backup_success $DBNAME" | curl --data-binary @- 'http://{{ groups[mon][0] }}:9091/metrics/job/backup/instance/{{ inventory_hostname }}'
 done
 ############################################################
 
 ####### Контроль количества файлов ##############
-FILELIST=`ls $BACKUPDIR | sed -e '/[0-9]\{8\}'$DOTNAME'$/!d'`
-FILENAMES=`echo "$FILELIST" | sed -e 's/\(^.*\)\([0-9]\{8\}'$DOTNAME'$\).*/\1/g' | sort -u`
+FILELIST=$(ls $BACKUPDIR | sed -e '/[0-9]\{8\}'$DOTNAME'$/!d')
+FILENAMES=$(echo "$FILELIST" | sed -e 's/\(^.*\)\([0-9]\{8\}'$DOTNAME'$\).*/\1/g' | sort -u)
 for CURRENT in $FILENAMES; do
   # Получение списка дат для текущего архива на удаление
-  TEMP1=`echo "$FILELIST" | sed -e '/\(^'$CURRENT'\)\([0-9]\{8\}\)\('$DOTNAME'$\)/!d' -e 's/\(^'$CURRENT'\)\([0-9]\{8\}\)\('$DOTNAME'$\)/\2/g' | sort -rn`
-  TEMP1=`echo "$TEMP1" | sed -e '1,'$MAXNUMBER'd'`
+  TEMP1=$(echo "$FILELIST" | sed -e '/\(^'$CURRENT'\)\([0-9]\{8\}\)\('$DOTNAME'$\)/!d' -e 's/\(^'$CURRENT'\)\([0-9]\{8\}\)\('$DOTNAME'$\)/\2/g' | sort -rn)
+  TEMP1=$(echo "$TEMP1" | sed -e '1,'$MAXNUMBER'd')
   #Склеивание
   for TEMP2 in $TEMP1; do
-    DELETELIST=`echo $CURRENT$TEMP2${DOTNAME//\\\/} && echo "$DELETELIST"`
+    DELETELIST=$(echo $CURRENT$TEMP2${DOTNAME//\\\/} && echo "$DELETELIST")
   done
-  DELETELIST=`echo "$DELETELIST" | sed -e '/^$/d'`
+  DELETELIST=$(echo "$DELETELIST" | sed -e '/^$/d')
 done
 if [ -n "$DELETELIST" ]; then
   echo "========== Файлы будут удалены =========="
