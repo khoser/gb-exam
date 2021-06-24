@@ -15,6 +15,14 @@
     state: latest
     update_cache: yes
 
+- name: Install mc, htop
+  apt:
+    pkg:
+      - mc
+      - htop
+      - curl
+      - net-tools
+
 - name: hosts
   blockinfile:
     dest: /etc/hosts
