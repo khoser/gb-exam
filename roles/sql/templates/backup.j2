@@ -30,7 +30,7 @@ function end_msg() {
 echo "========== `date '+%Y-%m-%d %H:%M'` START backup-mysql =========="
 if [ ! -d "$BACKUPDIR" ]; then
   echo "Директория не верна"
-  echo "backup_fail true" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/backup/instance/{{ inventory_hostname }}
+  echo "backup_fail 1" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/backup/instance/{{ inventory_hostname }}
   end_msg
   exit 0
 fi
@@ -53,7 +53,7 @@ for DBNAME in $DBLIST; do
 #  /usr/bin/mysqldump --routines --triggers --opt --user=$USER --password=$PASS --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
   /usr/bin/mysqldump --routines --triggers --opt --skip-lock-tables --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
   bzip2 -f $BACKUPDIR/$DBNAME.$NOWDATE.sql
-  echo "backup_success $DBNAME" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/backup/instance/{{ inventory_hostname }}
+  echo "backup_success_$DBNAME 1" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/backup/instance/{{ inventory_hostname }}
 done
 ############################################################
 
