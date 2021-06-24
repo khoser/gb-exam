@@ -1,6 +1,5 @@
 ---
 # vars file for sql
 mysql_cluster_name: exam_mysql_cluster
-mysql_root_password: "Pa$$w0rd"
 mysql_backup_dir: /var/backup/mysql
 

@@ -188,7 +188,7 @@
 
 - name: Set mysql root user password and only allow access to root user from loadbalancer IP and localhost
   mysql_user: 
-    name: root1
+    name: '{{ mysql_user }}'
     host: '{{ item }}'
     check_implicit_admin: yes
     login_user: root
@@ -213,7 +213,7 @@
 
 - name: Testing cluster status by connecting to sql[0]
   mysql_info:
-    login_user: root1
+    login_user: '{{ mysql_user }}'
     login_password: '{{ mysql_root_password }}'
     login_host: "{{ ansible_facts['default_ipv4']['address'] }}"
   register: server_info
@@ -277,3 +277,4 @@
     name: mysqld_exporter
     enabled: yes
     state: restarted
+

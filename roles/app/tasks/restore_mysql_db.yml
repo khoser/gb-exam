@@ -15,4 +15,5 @@
     login_host: "{{ hostvars[groups['app'][0]]['ansible_default_ipv4']['address']  }}"
     login_password: '{{ mysql_root_password }}'
     login_port: 6033
-    login_user: root1
+    login_user: '{{ mysql_user }}'
+

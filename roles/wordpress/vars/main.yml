@@ -1,10 +1,10 @@
 ---
 # vars file for wordpress
 
-server_name: "vektorooo.ru" # тут ваш домен 
-mysql_db: "wordpress" 
-mysql_user: "root1"
-mysql_password: "Pa$$w0rd"
+server_name: "{{ domain_address }}" # тут ваш домен 
+mysql_db: "{{ wordpress_db }}"
+mysql_user: "{{ mysql_user }}"
+mysql_password: "{{ mysql_password }}"
 
 nginx_vhosts:
 #  - listen: "80"
