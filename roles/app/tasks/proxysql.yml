@@ -1,10 +1,4 @@
 
-#- name: get-url
-#  get_url:
-#    url: https://repo.proxysql.com/ProxySQL/repo_pub_key
-#    dest: /tmp/proxysql.key
-
-
 - name: Add ProxySQL APT signing key
   apt_key:
     state: present
@@ -27,20 +21,6 @@
   register: proxysql_install
 
 
-#- name: Copy proxysql.cfg
-#  template:
-#    src: proxysql.j2
-#    dest: /etc/proxysql.cnf
-
-
-#- name: Init proxy
-#  shell: systemctl stop proxysql
-
-
-#- name: Init proxy
-#  shell: systemctl start proxysql-initial
-
-
 - name: start proxysql service
   systemd: state=restarted name=proxysql
 
@@ -52,8 +32,8 @@
 
 - name: proxysql_backend_servers
   proxysql_backend_servers:
-    login_user: 'admin'
-    login_password: 'admin'
+    login_user: '{{ proxysql_admin_user }}'
+    login_password: '{{ proxysql_admin_pass }}'
     login_host: '127.0.0.1'
     login_port: 6032
     hostname: "{{ item }}"
@@ -67,11 +47,11 @@
 
 - name: proxysql_mysql_users
   proxysql_mysql_users:
-    login_user: 'admin'
-    login_password: 'admin'
+    login_user: '{{ proxysql_admin_user }}'
+    login_password: '{{ proxysql_admin_pass }}'
     login_host: '127.0.0.1'
     login_port: 6032
-    username: 'root1'
+    username: '{{ mysql_user }}'
     password: '{{ mysql_root_password }}'
     frontend: yes
     backend: yes
@@ -79,51 +59,11 @@
     state: present
     load_to_runtime: yes
     save_to_disk: yes
-# можно уточнить предполагаемую нагрузку
-#    max_connections: 10000
-# нужно почитать поглубже про это
-#    transaction_persistent: false
 
-
-#- name: proxysql_replication_hostgroups
-#  proxysql_global_variables:
-#    login_user: 'admin'
-#    login_password: 'admin'
-#    login_host: '127.0.0.1'
-#    login_port: 6032
-##    writer_hostgroup: 1
-##    reader_hostgroup: 2
-##    state: present
-#    save_to_disk: yes
-
-
-#- name: proxysql_manage_config
-#  proxysql_manage_config:
-#    login_user: 'admin'
-#    login_password: 'admin'
-#    login_host: '127.0.0.1'
-#    login_port: 6032
-
-
-#- name: proxysql_global_variables
-#  proxysql_global_variables:
-#    login_user: 'admin'
-#    login_password: 'admin'
-#    login_host: '127.0.0.1'
-#    login_port: 6032
-
-
-#  для начала нам пока ненужно (тюнинг)
-#- name:  proxysql_query_rules
-#   proxysql_query_rules:
-#    login_user: 'admin'
-#    login_password: 'admin'
-#    login_host: '127.0.0.1'
-#    login_port: 6032
 
 - name: Testing cluster status by connecting to proxysql
   mysql_info:
-    login_user: root1
+    login_user: '{{ mysql_user }}'
     login_password: '{{ mysql_root_password }}'
     login_host: "{{ ansible_facts['default_ipv4']['address'] }}"
     login_port: 6033
@@ -184,3 +124,4 @@
     name: proxysql_exporter
     enabled: yes
     state: restarted
+

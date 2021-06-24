@@ -14,12 +14,12 @@ firewall_allowed_tcp_ports:
   - 9115 # blackbox
 
 # Настройки доменного имени для хоста мониторинга
-grafana_domain: grafana.vektorooo.ru
-prometheus_domain: prometheus.vektorooo.ru
+grafana_domain: "grafana.{{ domain_address }}"
+prometheus_domain: "prometheus.{{ domain_address }}"
 
-prometheus_base_user    : user
-prometheus_base_password: user
+prometheus_base_user    : "{{ basic_auth_user }}"
+prometheus_base_password: "{{ basic_auth_pass }}"
 
-grafana_base_user       : user
-grafana_base_password   : user
-  
+grafana_base_user       : "{{ basic_auth_user }}"
+grafana_base_password   : "{{ basic_auth_pass }}"
+

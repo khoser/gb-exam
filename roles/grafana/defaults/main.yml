@@ -224,7 +224,7 @@ grafana_datasources:
   - name: "Prometheus"
     type: "prometheus"
     access: "proxy"
-    url: "http://prometheus.vektorooo.ru"
+    url: "http://prometheus.{{ domain_address }}"
     basicAuth: true
     basicAuthUser: "{{ prometheus_base_user }}"
     basicAuthPassword: "{{ prometheus_base_password  }}"

@@ -31,6 +31,6 @@
     dest: /root/.my.cnf
     content: |
       [client]
-      user=root1
+      user={{ mysql_user }}
       password={{ mysql_root_password }}
 
