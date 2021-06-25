@@ -1,0 +1,4 @@
+- src: https://github.com/geerlingguy/ansible-role-php.git
+  version: 4.6.1
+  name: geerlingguy.php
+
