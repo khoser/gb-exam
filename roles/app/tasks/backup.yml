@@ -8,12 +8,12 @@
 - name: Put backup script
   template:
     src: backup.j2
-    dest: "{{ backup_dir }}/backup.sh"
+    dest: "{{ backup_dir }}/backup_dir.sh"
 
 
 - name: Changing perm of "backup.sh", adding "+x"
   file:
-    path: "{{ backup_dir }}/backup.sh"
+    path: "{{ backup_dir }}/backup_dir.sh"
     mode: a+x
 
 
@@ -23,4 +23,4 @@
     minute: "0"
     hour: "6"
     user: root
-    job: "{{ backup_dir }}/backup.sh >> {{ backup_dir }}/backup.log 2>&1"
+    job: "{{ backup_dir }}/backup_dir.sh >> {{ backup_dir }}/backup.log 2>&1"
