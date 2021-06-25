@@ -9,3 +9,6 @@
 - name: proxysql
   import_tasks: proxysql.yml
 
+
+- name: archive wordpress dir
+  import_tasks: backup.yml
