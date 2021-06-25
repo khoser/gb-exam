@@ -6,6 +6,14 @@ server_name: "{{ domain_address }}" # тут ваш домен
 nginx_vhosts:
   - listen: "80"
     server_name: '{{ prometheus_domain }}'
+    root: "/var/www/{{ prometheus_domain}}"
+    index: "index.php index.html index.htm"
+    error_page: "500 502 503 504  /50x.html"
+    access_log: "/var/log/nginx/{{ prometheus_domain }}.access.log  main"
+    error_log: ""
+    state: "present"
+    template: "{{ nginx_vhost_template }}"
+    filename: "{{ prometheus_domain }}.conf"
     extra_parameters: |
       location / {
         proxy_pass http://{{ ansible_host | default('localhost') }}:9090/;
@@ -15,9 +23,16 @@ nginx_vhosts:
       proxy_set_header X-WEBAUTH-USER $remote_user;
       proxy_set_header Authorization "";
 
-
   - listen: "80"
     server_name: '{{ grafana_domain }}'
+    root: "/var/www/{{ grafana_domain}}"
+    index: "index.php index.html index.htm"
+    error_page: "500 502 503 504  /50x.html"
+    access_log: "/var/log/nginx/{{ grafana_domain }}.access.log  main"
+    error_log: ""
+    state: "present"
+    template: "{{ nginx_vhost_template }}"
+    filename: "{{ grafana_domain }}.conf"
     extra_parameters: |
       location / {
         proxy_pass http://{{ ansible_host | default('localhost') }}:3000/;
