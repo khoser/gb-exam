@@ -10,8 +10,8 @@ firewall_allowed_tcp_ports:
   - 3000 # Grafana
   - 9100 # Node-exporter
   - 9090 # Prometheus
-  - 8086 # телеграф
-  - 9115 # blackbox
+#  - 8086 # телеграф
+  - 9115 # blackbox-exporter
   - 9091 # pushgateway
 
 # Настройки доменного имени для хоста мониторинга
