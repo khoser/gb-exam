@@ -33,7 +33,10 @@ fi
 
 # Выполнение архивации
 echo "$APPNAME"
-tar -cjf $BACKUPDIR/$APPNAME.$NOWDATE$DOTNAME $APPPATH
+cd /tmp/
+cp $APPPATH ./$APPNAME
+tar -cjf $BACKUPDIR/$APPNAME.$NOWDATE$DOTNAME $APPNAME
+rm -r ./$APPNAME
 echo "backup_success_$APPNAME 1" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/archive/instance/{{ inventory_hostname }}
 ############################################################
 
