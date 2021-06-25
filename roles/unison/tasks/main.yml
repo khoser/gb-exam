@@ -1,4 +1,10 @@
-- name: Install unison
-  apt:
-    pkg:
-      - unison
+---
+- hosts: app
+  gather_facts: yes
+  roles:
+    - role: unison_role
+      tags: [install_unison]
+
+- hosts: Ubuntu_Basic-1-2_30GB-app-1
+  roles:
+    - role: cron_unison
