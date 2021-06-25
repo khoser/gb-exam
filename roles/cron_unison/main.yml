@@ -6,7 +6,7 @@
 
 - name: content unisonsync
   copy:
-    content: "unison /home/ubuntu/test_sync ssh://10.0.0.5///home/ubuntu/test_sync"
+    content: "unison /var/www ssh://10.0.0.5///var/www"
     dest: "/usr/local/bin/unisonsync"
 
 - name: add unison in crontab
