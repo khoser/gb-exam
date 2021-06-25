@@ -4,6 +4,7 @@
 server_name: "{{ domain_address }}" # тут ваш домен
 
 nginx_vhosts:
+
   - listen: "80"
     server_name: '{{ prometheus_domain }}'
     root: "/var/www/{{ prometheus_domain}}"
@@ -43,3 +44,9 @@ nginx_vhosts:
       proxy_set_header  X-Forwarded-Proto http;
       proxy_set_header X-WEBAUTH-USER $remote_user;
       proxy_set_header Authorization "";
+
+#nginx_upstreams:
+# - name: myapp1
+#   servers: {
+#
+#   }
