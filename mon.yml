@@ -20,7 +20,7 @@
 
 - hosts: mon
   roles:
-    - role: mon-nginx
+    - role: geerlingguy.nginx
       tags: [mon-nginx]
 
 - hosts: mon
