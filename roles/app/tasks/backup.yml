@@ -7,7 +7,7 @@
 
 - name: Put backup script
   template:
-    src: backup.j2
+    src: backup_dir.j2
     dest: "{{ backup_dir }}/backup_dir.sh"
 
 
