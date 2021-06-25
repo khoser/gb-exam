@@ -26,11 +26,14 @@ function end_msg() {
   echo ""
 }
 
+function err_notify() {
+  echo "backup_fail 1" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/archive/instance/{{ inventory_hostname }}
+}
 
 echo "========== `date '+%Y-%m-%d %H:%M'` START backup-mysql =========="
 if [ ! -d "$BACKUPDIR" ]; then
   echo "Директория не верна"
-  echo "backup_fail 1" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/backup/instance/{{ inventory_hostname }}
+  err_notify
   end_msg
   exit 0
 fi
@@ -39,10 +42,10 @@ if [ -z "$DBLIST" ]; then
   ################## Архивация всех БД ######################
   # Получение массива имен БД
 #  DBLIST=`mysql --user=$USER --password=$PASS --host=$HOST --batch --skip-column-names -e "show databases"`
-  DBLIST=`mysql --host=$HOST --batch --skip-column-names -e "show databases"`
+  DBLIST=`mysql --host=$HOST --batch --skip-column-names -e "show databases"` || err_notify
   # Исключение имен БД
   for DBNAME in $DBEXCLUDE; do
-    DBLIST=`echo "$DBLIST" | sed "/^$DBNAME\$/d"`
+    DBLIST=`echo "$DBLIST" | sed "/^$DBNAME\$/d"` || err_notify
   done
 
 fi
@@ -51,8 +54,8 @@ fi
 for DBNAME in $DBLIST; do
   echo "$DBNAME"
 #  /usr/bin/mysqldump --routines --triggers --opt --user=$USER --password=$PASS --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
-  /usr/bin/mysqldump --routines --triggers --opt --skip-lock-tables --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
-  bzip2 -f $BACKUPDIR/$DBNAME.$NOWDATE.sql
+  /usr/bin/mysqldump --routines --triggers --opt --skip-lock-tables --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C || err_notify
+  bzip2 -f $BACKUPDIR/$DBNAME.$NOWDATE.sql || err_notify
   echo "backup_success_$DBNAME 1" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/backup/instance/{{ inventory_hostname }}
 done
 ############################################################

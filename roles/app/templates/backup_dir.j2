@@ -17,7 +17,7 @@ DOTNAME="\.tar\.bz2"
  
 # Сообщение по завершению выполнения
 function end_msg() {
-  echo "========== `date '+%Y-%m-%d %H:%M'` END backup-mysql =========="
+  echo "========== `date '+%Y-%m-%d %H:%M'` END backup wordpress =========="
   echo ""
 }
 
@@ -25,7 +25,7 @@ function err_notify() {
   echo "backup_fail 1" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/archive/instance/{{ inventory_hostname }}
 }
 
-echo "========== `date '+%Y-%m-%d %H:%M'` START backup-mysql =========="
+echo "========== `date '+%Y-%m-%d %H:%M'` START backup wordpress =========="
 if [ ! -d "$BACKUPDIR" ]; then
   echo "Директория не верна"
   err_notify
@@ -38,7 +38,7 @@ fi
 echo "$APPNAME"
 cd /tmp/
 cp -r $APPPATH ./$APPNAME || err_notify
-tar -cjf $BACKUPDIR/$APPNAME.$NOWDATE$DOTNAME $APPNAME || err_notify
+tar -cjf $BACKUPDIR/$APPNAME.$NOWDATE.tar.bz2 $APPNAME || err_notify
 rm -r ./$APPNAME
 echo "backup_success_$APPNAME 1" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/archive/instance/{{ inventory_hostname }}
 ############################################################
