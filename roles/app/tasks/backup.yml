@@ -1,0 +1,26 @@
+- name: Check backup dir
+  file:
+    path: '{{ backup_dir }}'
+    state: directory
+    mode: '0755'
+
+
+- name: Put backup script
+  template:
+    src: backup_dir.j2
+    dest: "{{ backup_dir }}/backup_dir.sh"
+
+
+- name: Changing perm of "backup.sh", adding "+x"
+  file:
+    path: "{{ backup_dir }}/backup_dir.sh"
+    mode: a+x
+
+
+- name: Crontab line
+  cron:
+    name: mysql_backup
+    minute: "0"
+    hour: "6"
+    user: root
+    job: "{{ backup_dir }}/backup_dir.sh >> {{ backup_dir }}/backup.log 2>&1"

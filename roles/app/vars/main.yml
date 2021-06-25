@@ -1,4 +1,4 @@
 ---
 # vars file for app
 mysql_cluster_name: exam_mysql_cluster
-
+backup_dir: /var/backup/app

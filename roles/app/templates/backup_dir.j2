@@ -1,57 +1,46 @@
 #!/bin/bash
-# Скрипт создания архивированного дампа БД MySQL
+# Скрипт создания архивированного каталога
 
 # !!! Директории слешами НЕ закрывать  !!!
-BACKUPDIR=/home/backup/mysql
+BACKUPDIR={{ backup_dir }}  # /etc/backup/app
 # Максимально число хранимых архивов
 MAXNUMBER=3
-# Настройка подключения
-HOST="localhost"
-#USER=" mysql_user }} '
-#PASS=' mysql_root_password '
-# Перечень БД
-# DBLIST="db1 db2"; DBLIST="" все найденные
-DBLIST=""
+# путь к папке приложения
+APPNAME=wordpress
+APPPATH=/var/www/{{ domain_address }}/wordpress
 # Список исключенных БД (при DBLIST="")
-DBEXCLUDE="information_schema"
 
 
 NOWTIME=`date '+%Y-%m-%d %H:%M'`
 NOWDATE=`date '+%Y%m%d'`
-DOTNAME="\.sql\.bz2"
+DOTNAME="\.tar\.bz2"
  
 # Сообщение по завершению выполнения
 function end_msg() {
-  echo "========== `date '+%Y-%m-%d %H:%M'` END backup-mysql =========="
+  echo "========== `date '+%Y-%m-%d %H:%M'` END backup wordpress =========="
   echo ""
 }
 
-echo "========== `date '+%Y-%m-%d %H:%M'` START backup-mysql =========="
+function err_notify() {
+  echo "backup_fail 1" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/archive/instance/{{ inventory_hostname }}
+}
+
+echo "========== `date '+%Y-%m-%d %H:%M'` START backup wordpress =========="
 if [ ! -d "$BACKUPDIR" ]; then
   echo "Директория не верна"
+  err_notify
   end_msg
   exit 0
 fi
 
-if [ -z "$DBLIST" ]; then
-  ################## Архивация всех БД ######################
-  # Получение массива имен БД
-#  DBLIST=`mysql --user=$USER --password=$PASS --host=$HOST --batch --skip-column-names -e "show databases"`
-  DBLIST=`mysql --host=$HOST --batch --skip-column-names -e "show databases"`
-  # Исключение имен БД
-  for DBNAME in $DBEXCLUDE; do
-    DBLIST=`echo "$DBLIST" | sed "/^$DBNAME\$/d"`
-  done
 
-fi
-
-# Выполнение дампа
-for DBNAME in $DBLIST; do
-  echo "$DBNAME"
-#  /usr/bin/mysqldump --routines --triggers --opt --user=$USER --password=$PASS --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
-  /usr/bin/mysqldump --routines --triggers --opt --host=$HOST $DBNAME > $BACKUPDIR/$DBNAME.$NOWDATE.sql -C
-  bzip2 -f $BACKUPDIR/$DBNAME.$NOWDATE.sql
-done
+# Выполнение архивации
+echo "$APPNAME"
+cd /tmp/
+cp -r $APPPATH ./$APPNAME || err_notify
+tar -cjf $BACKUPDIR/$APPNAME.$NOWDATE.tar.bz2 $APPNAME || err_notify
+rm -r ./$APPNAME
+echo "backup_success_$APPNAME 1" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/archive/instance/{{ inventory_hostname }}
 ############################################################
 
 ####### Контроль количества файлов ##############
