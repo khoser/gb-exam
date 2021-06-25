@@ -19,6 +19,8 @@
       tags: [prometheus]
 
 - hosts: mon
+  vars_files:
+    - roles/mon/vars/main.yml
   roles:
     - role: geerlingguy.nginx
       tags: [mon-nginx]
