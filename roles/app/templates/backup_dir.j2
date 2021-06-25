@@ -21,11 +21,14 @@ function end_msg() {
   echo ""
 }
 
+function err_notify() {
+  echo "backup_fail 1" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/archive/instance/{{ inventory_hostname }}
+}
 
 echo "========== `date '+%Y-%m-%d %H:%M'` START backup-mysql =========="
 if [ ! -d "$BACKUPDIR" ]; then
   echo "Директория не верна"
-  echo "backup_fail 1" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/archive/instance/{{ inventory_hostname }}
+  err_notify
   end_msg
   exit 0
 fi
@@ -34,8 +37,8 @@ fi
 # Выполнение архивации
 echo "$APPNAME"
 cd /tmp/
-cp $APPPATH ./$APPNAME
-tar -cjf $BACKUPDIR/$APPNAME.$NOWDATE$DOTNAME $APPNAME
+cp -r $APPPATH ./$APPNAME || err_notify
+tar -cjf $BACKUPDIR/$APPNAME.$NOWDATE$DOTNAME $APPNAME || err_notify
 rm -r ./$APPNAME
 echo "backup_success_$APPNAME 1" | curl --data-binary @- http://{{ groups['mon'][0] }}:9091/metrics/job/archive/instance/{{ inventory_hostname }}
 ############################################################
