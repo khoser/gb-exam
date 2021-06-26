@@ -1,3 +1,7 @@
+- src: https://github.com/geerlingguy/ansible-role-firewall.git
+  version: 2.5.0
+  name: firewall
+
 - src: https://github.com/geerlingguy/ansible-role-php.git
   version: 4.6.1
   name: geerlingguy.php
@@ -5,3 +9,24 @@
 - src: https://github.com/geerlingguy/ansible-role-nginx.git
   version: 3.0.0
   name: geerlingguy.nginx
+
+# Мониторинг
+
+- src: https://github.com/cloudalchemy/ansible-prometheus.git
+  version: 4.0.0
+  name: prometheus
+
+- src: https://github.com/cloudalchemy/ansible-grafana.git
+  version: 0.17.0
+  name: grafana
+
+
+# Агенты мониторинга
+
+- src: https://github.com/cloudalchemy/ansible-blackbox-exporter.git
+  version: 1.0.0
+  name: blackbox-exporter
+
+- src: https://github.com/cloudalchemy/ansible-node-exporter.git
+  version: 2.0.0
+  name: node-exporter
