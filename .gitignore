@@ -1,3 +1,5 @@
+roles/ansible-prometheus
+roles/ansible-grafana
 roles/blackbox-exporter
 roles/firewall
 roles/geerlingguy.nginx
