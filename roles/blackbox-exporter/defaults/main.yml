@@ -13,6 +13,9 @@ blackbox_exporter_configuration_modules:
     timeout: 5s
     http:
       method: GET
+      basic_auth:
+        username: "{{ basic_auth_user }}"
+        password: "{{ basic_auth_pass }}"     
       valid_status_codes: []
 #  http_post_2xx:
 #    prober: http
