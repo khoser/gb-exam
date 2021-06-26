@@ -77,7 +77,23 @@ grafana_datasources:
     access: "proxy"
     url: "localhost:9090"
     basicAuth: true
-#    basicAuthUser: "{{ prometheus_base_user }}"
-#    basicAuthPassword: "{{ prometheus_base_password  }}"
+    basicAuthUser: "{{ prometheus_base_user }}"
+    basicAuthPassword: "{{ prometheus_base_password  }}"
     isDefault: true
+    jsonData:
+      tlsAuth: false
+      tlsAuthWithCACert: false
+      tlsSkipVerify: true
+
+# Dashboards from https://grafana.com/dashboards
+grafana_dashboards:
+  - dashboard_id: '11074'
+    revision_id: '9'
+    datasource: 'Prometheus'
+#  - dashboard_id: '1860'
+#    revision_id: '4'
+#    datasource: 'Prometheus'
+#  - dashboard_id: '358'
+#    revision_id: '1'
+#    datasource: 'Prometheus'
 
