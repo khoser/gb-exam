@@ -50,3 +50,34 @@ nginx_vhosts:
 #   servers: {
 #
 #   }
+
+grafana_address: "0.0.0.0"
+grafana_port: 3000
+grafana_cap_net_bind_service: true
+
+grafana_url: "http://{{ grafana_address }}:{{ grafana_port }}"
+grafana_api_url: "{{ grafana_url }}"
+
+# Alert notification channels to configure
+grafana_alert_notifications:
+  notifiers:
+    - name: "telegram"
+      type: "telegram"
+      uid: telegram
+      is_default: true
+      settings:
+        bottoken: "1846747878:AAEpAckXeA4QhJZQCtBz8ahbZSNow6Vw2-s"
+        chatid: "-537523797"
+        uploadImage: true
+
+# Datasources to configure
+grafana_datasources:
+  - name: "Prometheus"
+    type: "prometheus"
+    access: "proxy"
+    url: "localhost:9090"
+    basicAuth: true
+#    basicAuthUser: "{{ prometheus_base_user }}"
+#    basicAuthPassword: "{{ prometheus_base_password  }}"
+    isDefault: true
+
