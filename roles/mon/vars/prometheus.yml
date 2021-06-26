@@ -1,0 +1,61 @@
+---
+
+prometheus_web_external_url: 'http://prometheus.{{ domain_address }}'
+
+prometheus_scrape_configs:
+  - job_name: "prometheus"
+    metrics_path: "{{ prometheus_metrics_path }}"
+    static_configs:
+      - targets:
+# Дефолтное значение - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9090"
+          - "{{ ansible_host | default('localhost') }}:9090"
+#  - job_name: "node"
+#    file_sd_configs:
+#      - files:
+#          - "{{ prometheus_config_dir }}/file_sd/node.yml"
+  - job_name: 'Node-exporter'
+    static_configs:
+    - targets:
+      - "{{ groups['app'][0] }}:9100"
+      - "{{ groups['app'][1] }}:9100"
+      - "{{ groups['sql'][0] }}:9100"
+      - "{{ groups['sql'][1] }}:9100"
+      - "{{ groups['sql'][2] }}:9100"
+      - "{{ groups['mon'][0] }}:9100"
+
+  - job_name: 'Proxysql-exporter'
+    static_configs:
+      - targets:
+          - "{{ groups['app'][0] }}:42004"
+          - "{{ groups['app'][1] }}:42004"
+    # with_items: "{{ groups['app'] } }"  - так не работает :(
+
+  - job_name: 'Mysqld-exporter'
+    static_configs:
+      - targets:
+          - "{{ groups['sql'][0] }}:9111"
+          - "{{ groups['sql'][1] }}:9111"
+          - "{{ groups['sql'][2] }}:9111"
+    # with_items: "{ { groups['sql'] }}"  - так не работает :(
+
+
+  - job_name: 'Pushgateway'
+    static_configs:
+      - targets:
+          - "{{ groups['mon'][0] }}:9091"
+
+
+  - job_name: 'blackbox-exporter'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]  # Look for a HTTP 200 response.
+    static_configs:
+      - targets:
+        - 'http://{{ domain_address }}'  # Target to probe with https.
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: "{{ groups['mon'][0] }}:9115"

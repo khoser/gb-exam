@@ -14,6 +14,8 @@
       tags: [firewall]
 
 - hosts: mon
+  vars_files:
+    - roles/mon/vars/prometheus.yml
   roles:
     - role: prometheus
       tags: [prometheus]
@@ -31,6 +33,8 @@
       tags: [node-exporter]
 
 - hosts: mon
+  vars_files:
+    - roles/mon/vars/blackbox-exporter.yml
   roles:
     - role: blackbox-exporter
       tags: [blackbox-exporter]
