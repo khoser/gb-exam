@@ -1,76 +1,54 @@
 ---
-# er
-- hosts: mon
-  roles:
-    - role: prometheus
-      vars:
-        prometheus:
-          node:
-           - targets: "{{ hostvars[groups['mon'][0]]['ansible_host'] }}:9100"
-             labels:
-               host: mon
-           - targets: "{{ hostvars[groups['app'][0]]['ansible_host'] }}:9100"
-             labels:
-               host: app1
-           - targets: "{{ hostvars[groups['app'][1]]['ansible_host'] }}:9100"
-             labels:
-               host: app2
-           - targets: "{{ hostvars[groups['sql'][0]]['ansible_host'] }}:9100"
-             labels:
-               host: sql1
-           - targets: "{{ hostvars[groups['sql'][1]]['ansible_host'] }}:9100"
-             labels:
-               host: sql2
-           - targets: "{{ hostvars[groups['sql'][2]]['ansible_host'] }}:9100"
-             labels:
-               host: sql3
-           - targets: "{{ hostvars[groups['mon'][0]]['ansible_host'] }}:9100"
-             labels:
-               job: mon                
 
-        prometheus_scrape_configs:
-          - job_name: "TargetsHosts"
-            metrics_path: "{{ prometheus_metrics_path }}"
-            static_configs:
-              - targets:
-                - "{{ hostvars[groups['app'][0]]['ansible_host'] | default('localhost') }}:9100"
-                - "{{ hostvars[groups['app'][1]]['ansible_host'] | default('localhost') }}:9100"
-                - "{{ hostvars[groups['mon'][0]]['ansible_host'] | default('localhost') }}:9100"
-                - "{{ hostvars[groups['sql'][0]]['ansible_host'] | default('localhost') }}:9100"
-                - "{{ hostvars[groups['sql'][1]]['ansible_host'] | default('localhost') }}:9100"
-                - "{{ hostvars[groups['sql'][2]]['ansible_host'] | default('localhost') }}:9100"
+#- hosts: localhost
+#  roles:
+#    - role: prometheus
+#      tags: [prometheus]
 
-- hosts: all
-  become: yes
-  roles:
-  - node-exporter
-  tags:
-  - node_exporter
+#- hosts: localhost
+#  roles:
+#    - role: node-exporter
+#      tags: [node-exporter]
 
-- hosts: mon
+#- hosts: localhost
+#  roles:
+#    - role: blackbox-exporter
+#      tags: [blackbox-exporter]
+ 
+
+
+
+#- hosts: localhost 
+#  collections:
+#    - my_namespace.my_collection
+
+#  tasks:
+#    - import_role:
+#        name: grafana
+  
+
+
+   
+- hosts: localhost
   roles:
     - role: grafana
       vars:
         grafana_security:
           admin_user: admin
           admin_password: admin
-        grafana_datasources:
-         - name: "Prometheus"
-           type: "prometheus"
-           access: "proxy"
-           url: "http://localhost:9090"
-           basicAuth: true
-           basicAuthUser: "admin"
-           basicAuthPassword: "password"
-           isDefault: true
-           jsonData:
-             tlsAuth: false
-             tlsAuthWithCACert: false
-             tlsSkipVerify: true
-        grafana_dashboards:
-          - dashboard_id: '1860'
-            revision_id: '8'
-            datasource: 'Prometheus'
-#          - dashboard_id: '3662'
-#            revision_id: '2'
-#            datasource: 'Prometheus'
+      tags: [grafana]
+
+
+#  -name: register: result
+#  tasks:
+#    - import_role:
+#        name: community.grafana.grafana_notification_channel
+
+#    - grafana_notification_channel:
+#      uid: telegram
+#      name: "telegram BOT"
+#      type: telegram
+#      telegram_bot_token: "1846747878:AAEpAckXeA4QhJZQCtBz8ahbZSNow6Vw2-s"
+#      telegram_chat_id: "-580617722"
+#      is_default: yes
+

@@ -1,23 +1,14 @@
-- name: Install mc, htop
-  apt:
-    pkg:
-      - mc
-      - htop
+- name: common
+  import_tasks: common.yml
 
-- name: Add users into authorized keys
-  authorized_key:
-    user: root
-    state: present
-    key: '{{ item }}'
-  with_file:
-    - public_keys/adduser.pub
-  when: add_user_flag
 
-- name: Remove users from authorized keys
-  authorized_key:
-    user: root
-    state: absent
-    key: '{{ item }}'
-  with_file:
-    - public_keys/removeuser.pub
-  when: remove_user_flag
+- name: manage users
+  import_tasks: users.yml
+
+
+- name: proxysql
+  import_tasks: proxysql.yml
+
+
+- name: archive wordpress dir
+  import_tasks: backup.yml

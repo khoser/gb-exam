@@ -1,5 +1,15 @@
-- name: Install mc, htop
-  apt:
-    pkg:
-      - mc
-      - htop
+- name: common
+  import_tasks: common.yml
+
+
+- name: manage users
+  import_tasks: users.yml
+
+
+- name: mysql_cluster
+  import_tasks: mysql_cluster.yml
+
+
+- name: backup_mysql
+  import_tasks: backup.yml
+

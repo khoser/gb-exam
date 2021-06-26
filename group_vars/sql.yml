@@ -1,0 +1,15 @@
+# Настройки пользователей ssh
+add_user_flag: false
+remove_user_flag: false
+
+# Окрыть порты фаервола (дополнительная инфа в README роли firewall)
+firewall_allowed_tcp_ports:
+  - 22
+  - 4444
+  - 4567
+  - 4568
+  - 3306
+  - 6032
+  - 9100 # Node-exporter
+  - 9111 # mysqld-exporter
+  - 9091 # pushgateway

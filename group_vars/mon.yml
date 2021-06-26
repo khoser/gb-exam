@@ -1,0 +1,26 @@
+# Настройки пользователей ssh
+add_user_flag: false
+remove_user_flag: false
+
+# Окрыть порты фаервола (дополнительная инфа в README роли firewall)
+firewall_allowed_tcp_ports:
+  - 22
+  - 80
+  - 443
+  - 3000 # Grafana
+  - 9100 # Node-exporter
+  - 9090 # Prometheus
+#  - 8086 # телеграф
+  - 9115 # blackbox-exporter
+  - 9091 # pushgateway
+
+# Настройки доменного имени для хоста мониторинга
+grafana_domain: "grafana.{{ domain_address }}"
+prometheus_domain: "prometheus.{{ domain_address }}"
+
+prometheus_base_user    : "{{ basic_auth_user }}"
+prometheus_base_password: "{{ basic_auth_pass }}"
+
+grafana_base_user       : "{{ basic_auth_user }}"
+grafana_base_password   : "{{ basic_auth_pass }}"
+

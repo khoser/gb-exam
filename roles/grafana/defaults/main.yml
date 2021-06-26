@@ -197,10 +197,10 @@ grafana_plugins: []
 #  - raintank-worldping-app
 
 # Dashboards from https://grafana.com/dashboards
-grafana_dashboards: []
-#  - dashboard_id: '4271'
-#    revision_id: '3'
-#    datasource: 'Prometheus'
+grafana_dashboards:
+  - dashboard_id: '13659'
+    revision_id: '1'
+    datasource: 'Prometheus'
 #  - dashboard_id: '1860'
 #    revision_id: '4'
 #    datasource: 'Prometheus'
@@ -211,24 +211,36 @@ grafana_dashboards: []
 grafana_dashboards_dir: "dashboards"
 
 # Alert notification channels to configure
-grafana_alert_notifications: []
-#  - name: "Email Alert"
-#    type: "email"
-#    uid: channel1
-#    is_default: true
-#    settings:
-#      addresses: "example@example.com"
+grafana_alert_notifications:
+  notifiers:
+ #   - name: Channel 1
+ #     type: email
+ #     uid: channel1
+ #     is_default: false
+ #     send_reminder: false
+ #     settings:
+ #       addresses: "example@example.com"
+ #       autoResolve: true
+
+  - name: "telegram"
+    type: "telegram"
+    uid: telegram
+    is_default: true
+    settings:
+      bottoken: "1846747878:AAEpAckXeA4QhJZQCtBz8ahbZSNow6Vw2-s"
+      chatid: "-580617722"
+      uploadImage: true
 
 # Datasources to configure
-grafana_datasources: []
-#  - name: "Prometheus"
-#    type: "prometheus"
-#    access: "proxy"
-#    url: "http://prometheus.mydomain"
-#    basicAuth: true
-#    basicAuthUser: "admin"
-#    basicAuthPassword: "password"
-#    isDefault: true
+grafana_datasources:
+  - name: "Prometheus"
+    type: "prometheus"
+    access: "proxy"
+    url: "localhost:9090"
+    basicAuth: true
+#    basicAuthUser: "{{ prometheus_base_user }}"
+#    basicAuthPassword: "{{ prometheus_base_password  }}"
+    isDefault: true
 #    jsonData:
 #      tlsAuth: false
 #      tlsAuthWithCACert: false

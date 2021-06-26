@@ -1,5 +1,102 @@
 - name: Install mc, htop
   apt:
     pkg:
-      - mc
-      - htop
+      - python3-jmespath
+      - python3-passlib
+
+- name: Add users into authorized keys
+  authorized_key:
+    user: root
+    state: present
+    key: '{{ item }}'
+  with_file:
+    - public_ssh_keys/adduser.pub
+  when: add_user_flag
+
+- name: Remove users from authorized keys
+  authorized_key:
+    user: root
+    state: absent
+    key: '{{ item }}'
+  with_file:
+    - public_ssh_keys/removeuser.pub
+  when: remove_user_flag
+
+# Basic auth
+- name: create /var/www/{{ grafana_domain }} directory for unarchiving
+  file:
+    path: /var/www/{{ grafana_domain }}
+    state: directory
+
+- name: Grafana basic auth settings
+  htpasswd:
+    path: "/var/www/{{ grafana_domain }}/.passwd"
+    name: "{{ grafana_base_user }}"
+    password: "{{ grafana_base_password }}"
+
+- name: Set ownership
+  file:
+    path: "/var/www/{{ grafana_domain }}"
+    state: directory
+    recurse: yes
+    owner: www-data
+    group: www-data
+
+- name: Prometheus basic auth settings
+  htpasswd:
+    path: "/var/www/{{ prometheus_domain }}/.passwd"
+    name: "{{ prometheus_base_user }}"
+    password: "{{ prometheus_base_password }}"
+
+- name: Set ownership
+  file:
+    path: "/var/www/{{ prometheus_domain }}"
+    state: directory
+    recurse: yes
+    owner: www-data
+    group: www-data
+
+
+# install push gateway for prometheus
+- name: Download and unpack pushgateway v1.4.1
+  unarchive:
+    src: https://github.com/prometheus/pushgateway/releases/download/v1.4.1/pushgateway-1.4.1.linux-amd64.tar.gz
+    dest: "/opt"
+    remote_src: yes
+    creates: "/opt/pushgateway-1.4.1.linux-amd64"
+
+
+- name: Create a symbolic link
+  file:
+    src: "/opt/pushgateway-1.4.1.linux-amd64"
+    dest: "/opt/pushgateway"
+    state: link
+
+
+- name: Configure pushgateway service
+  copy:
+    dest: /etc/systemd/system/pushgateway.service
+    content: |
+      [Unit]
+      Description=mysqld exporter
+      Wants=network-online.target
+      After=network-online.target
+
+      [Service]
+      User=root
+      Group=root
+      Type=simple
+      ExecStart=/opt/pushgateway/pushgateway \
+        --web.listen-address=:9091 \
+        --persistence.file=/opt/pushgateway/pushgateway.metrics
+
+      [Install]
+      WantedBy=multi-user.target
+
+
+- name: Enable pushgateway
+  systemd:
+    name: pushgateway
+    enabled: yes
+    state: restarted
+

@@ -1,0 +1,19 @@
+# Настройки пользователей ssh
+add_user_flag: false
+remove_user_flag: false
+
+# Окрыть порты фаервола (дополнительная инфа в README роли firewall)
+firewall_allowed_tcp_ports:
+  - 22
+  - 80
+  - 443
+  - 9100 # Node-exporter
+  - 32412
+  - 32414
+  - 6033
+  - 6032
+  - 42004
+
+firewall_allowed_udp_ports:
+  - 32412
+  - 32414
