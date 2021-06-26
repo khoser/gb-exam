@@ -10,6 +10,17 @@
   version: 3.0.0
   name: geerlingguy.nginx
 
+# Мониторинг
+
+- src: https://github.com/cloudalchemy/ansible-prometheus.git
+  version: 4.0.0
+  name: prometheus
+
+- src: https://github.com/cloudalchemy/ansible-grafana.git
+  version: 0.17.0
+  name: grafana
+
+
 # Агенты мониторинга
 
 - src: https://github.com/cloudalchemy/ansible-blackbox-exporter.git

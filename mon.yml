@@ -14,6 +14,8 @@
       tags: [firewall]
 
 - hosts: mon
+  var_files:
+    - vars/mon/prometheus.yml 
   roles:
     - role: prometheus
       tags: [prometheus]
@@ -38,6 +40,8 @@
       tags: [blackbox-exporter]
       
 - hosts: mon
+  var_files:
+    - vars/mon/grafana.yml
   roles:
     - role: grafana
       vars:
