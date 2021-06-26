@@ -1,3 +1,4 @@
+roles/firewall
 roles/geerlingguy.php
 roles/geerlingguy.nginx
 test*
