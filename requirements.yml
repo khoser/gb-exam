@@ -16,9 +16,9 @@
   version: 4.0.0
   name: prometheus
 
-- src: https://github.com/cloudalchemy/ansible-grafana.git
-  version: 0.17.0
-  name: grafana
+#- src: https://github.com/cloudalchemy/ansible-grafana.git
+#  version: 0.17.0
+#  name: grafana
 
 
 # Агенты мониторинга
