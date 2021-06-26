@@ -36,6 +36,8 @@
       tags: [blackbox-exporter]
       
 - hosts: mon
+  vars_files:
+    - roles/mon/vars/main.yml
   roles:
     - role: grafana
       vars:
