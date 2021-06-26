@@ -9,3 +9,13 @@
 - src: https://github.com/geerlingguy/ansible-role-nginx.git
   version: 3.0.0
   name: geerlingguy.nginx
+
+# Агенты мониторинга
+
+- src: https://github.com/cloudalchemy/ansible-blackbox-exporter.git
+  version: 1.0.0
+  name: blackbox-exporter
+
+- src: https://github.com/cloudalchemy/ansible-node-exporter.git
+  version: 2.0.0
+  name: node-exporter

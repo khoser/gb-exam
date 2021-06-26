@@ -1,0 +1,10 @@
+blackbox_exporter_configuration_modules:
+  http_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      method: GET
+      basic_auth:
+        username: "{{ basic_auth_user }}"
+        password: "{{ basic_auth_pass }}"     
+      valid_status_codes: []

@@ -31,6 +31,8 @@
       tags: [node-exporter]
 
 - hosts: mon
+  vars_files:
+    - vars/mon/blackbox-exporter.yml
   roles:
     - role: blackbox-exporter
       tags: [blackbox-exporter]
