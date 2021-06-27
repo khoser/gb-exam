@@ -94,3 +94,10 @@
     dest: /var/www/html/index.html
     content: 'Under construction'
 
+
+- name: start nginx-prometheus-exporter
+  systemd:
+    name: nginx-prometheus-exporter
+    state: restarted
+  ignore_errors: yes
+
