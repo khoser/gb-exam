@@ -71,13 +71,28 @@ grafana_alert_notifications:
         uploadImage: true
 
 # Datasources to configure
+#grafana_datasources:
+#  - name: "Prometheus"
+#    type: "prometheus"
+#    access: "proxy"
+#    url: "localhost:9090"
+#    basicAuth: true
+#    basicAuthUser: "{{ prometheus_base_user }}"
+#    basicAuthPassword: "{{ prometheus_base_password  }}"
+#    isDefault: true
+
 grafana_datasources:
   - name: "Prometheus"
     type: "prometheus"
     access: "proxy"
-    url: "localhost:9090"
+    url: "http://prometheus.{{ domain_address }}"
     basicAuth: true
-#    basicAuthUser: "{{ prometheus_base_user }}"
-#    basicAuthPassword: "{{ prometheus_base_password  }}"
+    basicAuthUser: "{{ prometheus_base_user }}"
+    basicAuthPassword: "{{ prometheus_base_password  }}"
     isDefault: true
+    jsonData:
+      tlsAuth: false
+      tlsAuthWithCACert: false
+      tlsSkipVerify: true
+      httpMethod: 'GET'
 
