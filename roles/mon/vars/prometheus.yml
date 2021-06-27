@@ -59,3 +59,11 @@ prometheus_scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: "{{ groups['mon'][0] }}:9115"
+
+
+  - job_name: 'nginx-prometheus-exporter'
+    static_configs:
+      - targets:
+          - "{{ groups['app'][0] }}:9113"
+          - "{{ groups['app'][1] }}:9113"
+
