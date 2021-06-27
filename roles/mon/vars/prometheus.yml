@@ -59,3 +59,23 @@ prometheus_scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: "{{ groups['mon'][0] }}:9115"
+
+  - job_name: 'blackbox-nodes'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]  # Look for a HTTP 200 response.
+    static_configs:
+      - targets:
+        - 'http://{{ groups['app'][0] }}'
+        - 'http://{{ groups['app'][1] }}'
+        - 'http://{{ groups['sql'][0] }}'
+        - 'http://{{ groups['sql'][1] }}'
+        - 'http://{{ groups['sql'][2] }}'
+        - 'http://{{ groups['mon'][0] }}'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: "{{ groups['mon'][0] }}:9115"
