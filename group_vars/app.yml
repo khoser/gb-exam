@@ -13,6 +13,7 @@ firewall_allowed_tcp_ports:
   - 6033
   - 6032
   - 42004
+  - 9113 # nginx-prometheus-exporter
 
 firewall_allowed_udp_ports:
   - 32412
