@@ -12,3 +12,7 @@
 
 - name: archive wordpress dir
   import_tasks: backup.yml
+
+- name: nginx-prometheus-exporter
+  import_tasks: nginxe.yml
+
